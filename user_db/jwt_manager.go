@@ -16,28 +16,44 @@ type JWTManager struct {
 	HMACKey []byte
 }
 
-type jwtUserClaims struct {
+type JWTUserClaims struct {
 	jwt.StandardClaims
 
 	ID   string `json:"https://github.com/yurinandayona-com/kuma/claim-types/user-id"`
 	Name string `json:"https://github.com/yurinandayona-com/kuma/claim-types/user-name"`
 }
 
+// Verify verifies t as JWT and then returns a user bound this JWT or error.
 func (jm *JWTManager) Verify(t string) (server.User, error) {
-	token, err := jwt.ParseWithClaims(t, &jwtUserClaims{}, func(t *jwt.Token) (interface{}, error) {
+	claims, valid, err := jm.Parse(t)
+	if err != nil {
+		return nil, err
+	}
+
+	if valid {
+		return jm.UserDB.Verify(claims.ID, claims.Name)
+	} else {
+		return nil, errors.New("kuma: invalid JWT")
+	}
+}
+
+// Parse parses t as JWT and then returns JWTUserClaims bound this JWT and
+// bool flag which is whether valid or invalid or error.
+func (jm *JWTManager) Parse(t string) (*JWTUserClaims, bool, error) {
+	token, err := jwt.ParseWithClaims(t, &JWTUserClaims{}, func(t *jwt.Token) (interface{}, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("invalid JWT algorithm")
 		}
 		return jm.HMACKey, nil
 	})
 	if err != nil {
-		return nil, errors.Wrap(err, "kuma: invalid JWT token")
+		return nil, false, errors.Wrap(err, "kuma: invalid JWT token")
 	}
 
-	if claims, ok := token.Claims.(*jwtUserClaims); ok && token.Valid {
-		return jm.UserDB.Verify(claims.ID, claims.Name)
+	if claims, ok := token.Claims.(*JWTUserClaims); ok {
+		return claims, token.Valid, nil
 	} else {
-		return nil, errors.New("kuma: invalid JWT")
+		return nil, false, errors.New("kuma: invalid JWT")
 	}
 }
 
@@ -47,7 +63,7 @@ func (jm *JWTManager) Sign(u *User) (string, error) {
 		return "", err
 	}
 
-	claims := &jwtUserClaims{
+	claims := &JWTUserClaims{
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(TokenTimeout).Unix(),
 		},
