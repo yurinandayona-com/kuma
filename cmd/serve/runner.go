@@ -48,14 +48,14 @@ func (r *runner) Run() error {
 
 	errCh := make(chan error, 2)
 
-	go r.RunHTTPServer(errCh)
-	go r.RunGRPCServer(errCh)
+	go r.runHTTPServer(errCh)
+	go r.runGRPCServer(errCh)
 
 	err = <-errCh
 	return err
 }
 
-func (r *runner) RunHTTPServer(errCh chan<- error) {
+func (r *runner) runHTTPServer(errCh chan<- error) {
 	lis, err := net.Listen("tcp", r.Config.HTTP.Listen)
 	if err != nil {
 		errCh <- err
@@ -72,7 +72,7 @@ func (r *runner) RunHTTPServer(errCh chan<- error) {
 	r.Stop()
 }
 
-func (r *runner) RunGRPCServer(errCh chan<- error) {
+func (r *runner) runGRPCServer(errCh chan<- error) {
 	lis, err := net.Listen("tcp", r.Config.GRPC.Listen)
 	if err != nil {
 		errCh <- err
