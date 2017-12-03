@@ -1,0 +1,21 @@
+syntax = "proto3";
+package kuma.hub;
+option go_package = "api";
+
+service Hub {
+  rpc Prepare(HubConfig) returns(HubInfo);
+  rpc Connect(HubInfo) returns(stream Request);
+}
+
+message HubConfig {
+  string subdomain = 1;
+}
+
+message HubInfo {
+  string host = 1;
+}
+
+message Request {
+  string host = 1;
+  string tunnelID = 2;
+}

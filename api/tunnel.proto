@@ -1,0 +1,41 @@
+syntax = "proto3";
+package kuma.tunnel;
+option go_package = "api";
+
+import "google/protobuf/empty.proto";
+
+service Tunnel {
+  rpc ReceiveHeader(google.protobuf.Empty) returns(RequestHeader);
+  rpc ReceiveBody(google.protobuf.Empty) returns(stream RequestBody);
+  rpc SendHeader(ResponseHeader) returns(google.protobuf.Empty);
+  rpc SendBody(stream ResponseBody) returns(google.protobuf.Empty);
+  rpc SendError(ResponseError) returns(google.protobuf.Empty);
+}
+
+message RequestHeader {
+  string method = 1;
+  string path = 2;
+  repeated Header headers = 3;
+}
+
+message RequestBody {
+  bytes body = 1;
+}
+
+message ResponseHeader {
+  int32 status = 1;
+  repeated Header headers = 2;
+}
+
+message ResponseBody {
+  bytes body = 1;
+}
+
+message ResponseError {
+  string error = 1;
+}
+
+message Header {
+  string name = 1;
+  repeated string values = 2;
+}
