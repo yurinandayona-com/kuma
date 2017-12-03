@@ -21,7 +21,10 @@ dep:
 
 #
 # Utilities
-.PHONY: loc
+.PHONY: loc tree
 
 loc:
 	cloc $$(git ls-files | grep -Ev '^vendor/|.pb.go$$')
+
+tree:
+	tree -I vendor -N
