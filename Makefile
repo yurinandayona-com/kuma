@@ -13,3 +13,7 @@ fmt:
 
 loc:
 	cloc $$(git ls-files | grep -Ev '^vendor/|.pb.go$$')
+
+dep:
+	dep ensure -v
+	dep prune -v
