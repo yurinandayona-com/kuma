@@ -4,8 +4,8 @@ import (
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"gopkg.in/go-playground/validator.v9"
 	"github.com/yurinandayona-com/kuma/client"
+	"gopkg.in/go-playground/validator.v9"
 	"log"
 )
 
@@ -39,10 +39,10 @@ func init() {
 
 			cli := &client.Client{
 				GRPCServer: cfg.GRPCServer,
-				UseTLS: cfg.UseTLS,
-				Token: cfg.Token,
+				UseTLS:     cfg.UseTLS,
+				Token:      cfg.Token,
 
-				Port: cfg.Port,
+				Port:      cfg.Port,
 				Subdomain: cfg.Subdomain,
 			}
 

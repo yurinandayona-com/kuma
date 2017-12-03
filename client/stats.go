@@ -12,7 +12,7 @@ type stats struct {
 	TunnelID string
 
 	Method string
-	Path string
+	Path   string
 
 	RequestBodySize int64
 

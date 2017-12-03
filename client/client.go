@@ -2,19 +2,19 @@ package client
 
 import (
 	"crypto/x509"
-	"io"
+	"github.com/pkg/errors"
 	"github.com/yurinandayona-com/kuma/api"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/metadata"
-	"github.com/pkg/errors"
+	"io"
 	"log"
 )
 
 type client struct {
 	BaseCtx context.Context
-	cancel func()
+	cancel  func()
 
 	Conn *grpc.ClientConn
 }
@@ -24,7 +24,7 @@ type Client struct {
 	UseTLS     bool
 	Token      string
 
-	Port int
+	Port      int
 	Subdomain string
 
 	client
@@ -106,7 +106,7 @@ func (cli *Client) dialConn() (*grpc.ClientConn, error) {
 
 func (cli *Client) handleRequest(req *api.Request) {
 	t := &tunnel{
-		Client: cli,
+		Client:  cli,
 		Request: req,
 	}
 

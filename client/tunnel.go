@@ -3,13 +3,13 @@ package client
 import (
 	"fmt"
 	google_protobuf "github.com/golang/protobuf/ptypes/empty"
+	"github.com/pkg/errors"
 	"github.com/yurinandayona-com/kuma/api"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc/metadata"
-	"github.com/pkg/errors"
 	"io"
-	"net/http"
 	"log"
+	"net/http"
 	"time"
 )
 
@@ -22,7 +22,7 @@ var (
 )
 
 type tunnel struct {
-	Client *Client
+	Client  *Client
 	Request *api.Request
 
 	tunnel api.TunnelClient
