@@ -18,7 +18,7 @@ func Load(store *viper.Viper, cfgFile string, cfg interface{}) error {
 
 	validate := validator.New()
 	if err := validate.Struct(cfg); err != nil {
-		return err
+		return &validateErrorWrapper{inner: err}
 	}
 
 	return nil

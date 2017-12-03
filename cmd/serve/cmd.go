@@ -4,7 +4,6 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/yurinandayona-com/kuma/config"
-	"gopkg.in/go-playground/validator.v9"
 	"log"
 )
 
@@ -25,14 +24,7 @@ func init() {
 			var cfg Config
 			err := config.Load(Store, cfgFile, &cfg)
 			if err != nil {
-				if es, ok := err.(validator.ValidationErrors); ok {
-					for _, e := range es {
-						log.Printf("alert: %s", e)
-					}
-					log.Fatal("alert: kuma: failed to load config")
-				} else {
-					log.Fatalf("alert: %s", err)
-				}
+				log.Fatalf("alert: %s", err)
 			}
 
 			cfg.DebugLog()
