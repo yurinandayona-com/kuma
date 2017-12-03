@@ -1,10 +1,10 @@
 package connect
 
 import (
-	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/yurinandayona-com/kuma/client"
+	"github.com/yurinandayona-com/kuma/config"
 	"gopkg.in/go-playground/validator.v9"
 	"log"
 )
@@ -15,15 +15,16 @@ var (
 )
 
 func init() {
-	var config string
+	var cfgFile string
 
 	Cmd = &cobra.Command{
 		Use:   "connect",
 		Short: "Connect to kuma gRPC server",
 		Args:  cobra.ExactArgs(0),
 		Run: func(cmd *cobra.Command, args []string) {
-			log.Printf("info: load config: %s", config)
-			cfg, err := InitConfig(config)
+			log.Printf("info: load config: %s", cfgFile)
+			var cfg Config
+			err := config.Load(Store, cfgFile, &cfg)
 			if err != nil {
 				if es, ok := err.(validator.ValidationErrors); ok {
 					for _, e := range es {
@@ -57,7 +58,7 @@ func init() {
 	// Flag settings
 
 	// Flag for configuration file
-	Cmd.Flags().StringVarP(&config, "config", "C", ".kuma/connect.toml", "specify configuration file")
+	Cmd.Flags().StringVarP(&cfgFile, "config", "C", ".kuma/connect.toml", "specify configuration file")
 
 	// Flags for gRPC server
 	Cmd.Flags().String("grpc-server", "", "gRPC server address to connect")
@@ -81,33 +82,4 @@ func init() {
 	Store.BindPFlag("token", Cmd.Flags().Lookup("token"))
 	Store.BindPFlag("port", Cmd.Flags().Lookup("port"))
 	Store.BindPFlag("subdomain", Cmd.Flags().Lookup("subdomain"))
-}
-
-func InitStore(config string) error {
-	Store.SetConfigFile(config)
-	Store.AutomaticEnv()
-
-	if err := Store.ReadInConfig(); err != nil {
-		return errors.Wrap(err, "kuma: read config")
-	}
-
-	return nil
-}
-
-func InitConfig(config string) (*Config, error) {
-	if err := InitStore(config); err != nil {
-		return nil, err
-	}
-
-	var cfg Config
-	if err := Store.Unmarshal(&cfg); err != nil {
-		return nil, errors.Wrap(err, "kuma: unmarshal config")
-	}
-
-	validate := validator.New()
-	if err := validate.Struct(cfg); err != nil {
-		return nil, err
-	}
-
-	return &cfg, nil
 }

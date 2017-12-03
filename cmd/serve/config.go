@@ -1,45 +1,40 @@
 package serve
 
 import (
-	"github.com/BurntSushi/toml"
-	"github.com/pkg/errors"
-	"io/ioutil"
+	"log"
 )
 
 type Config struct {
-	UserDB string `toml:"user_db"`
+	UserDB string `mapstructure:"user_db"`
 
-	HashIDsSalt string `toml:"hash_ids_salt"`
+	HashIDsSalt string `mapstructure:"hash_ids_salt",validate:"required"`
 
-	HMACKey string `toml:"hmac_key"`
+	HMACKey string `mapstructure:"hmac_key",validate:"required"`
 
-	BaseDomain string `toml:"base_domain"`
+	BaseDomain string `mapstructure:"base_domain",validate:"required"`
 
 	HTTP struct {
-		Listen string `toml:"listen"`
-	} `toml:"http"`
+		Listen string `mapstructure:"listen"`
+	} `mapstructure:"http"`
 
 	GRPC struct {
-		Listen string `toml:"listen"`
+		Listen string `mapstructure:"listen"`
 
-		UseTLS bool `toml:"use_tls"`
+		UseTLS bool `mapstructure:"use_tls"`
 
-		TLSCert string `toml:"tls_cert"`
-		TLSKey  string `toml:"tls_key"`
-	} `toml:"grpc"`
+		TLSCert string `mapstructure:"tls_cert"`
+		TLSKey  string `mapstructure:"tls_key"`
+	} `mapstructure:"grpc"`
 }
 
-func LoadConfig(filename string) (*Config, error) {
-	p, err := ioutil.ReadFile(filename)
-	if err != nil {
-		return nil, errors.Wrap(err, "kuma: failed to load config file")
-	}
-
-	var cfg Config
-	err = toml.Unmarshal(p, &cfg)
-	if err != nil {
-		return nil, errors.Wrap(err, "kuma: failed to load config TOML")
-	}
-
-	return &cfg, nil
+func (cfg *Config) DebugLog() {
+	log.Printf("debug: user_db = %#v", cfg.UserDB)
+	log.Print("debug: hash_ids_salt = *** (hide)")
+	log.Print("debug: hmac_key = *** (hide)")
+	log.Printf("debug: base_domain = %#v", cfg.BaseDomain)
+	log.Printf("debug: http.listen = %#v", cfg.HTTP.Listen)
+	log.Printf("debug: grpc.listen = %#v", cfg.GRPC.Listen)
+	log.Printf("debug: grpc.use_tls = %#v", cfg.GRPC.UseTLS)
+	log.Printf("debug: grpc.tls_cert = %#v", cfg.GRPC.TLSCert)
+	log.Printf("debug: grpc.tls_key = %#v", cfg.GRPC.TLSKey)
 }
