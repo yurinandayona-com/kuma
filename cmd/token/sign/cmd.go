@@ -13,14 +13,14 @@ import (
 )
 
 const (
-	defaultExpiration = 24 * time.Hour * 100
+	defaultExpirationDays = 100
 )
 
 var Cmd *cobra.Command
 
 func init() {
 	var name string
-	var expiration time.Duration
+	var expirationDays int
 
 	Cmd = &cobra.Command{
 		Use:   "sign",
@@ -69,8 +69,9 @@ func init() {
 
 			log.Print("debug: user.name = %#v", user.Name)
 			log.Print("debug: user.id = %#v", user.ID)
-			log.Print("debug: expiration = %s", expiration)
+			log.Print("debug: expiration_days = %d days", expirationDays)
 
+			expiration := time.Duration(expirationDays) * 24 * time.Hour
 			signed, err := jm.Sign(user, time.Now().Add(expiration))
 			if err != nil {
 				log.Fatalf("alert: %s", err)
@@ -81,5 +82,5 @@ func init() {
 	}
 
 	Cmd.Flags().StringVarP(&name, "name", "n", "", "user name (required)")
-	Cmd.Flags().DurationVarP(&expiration, "expiration", "e", defaultExpiration, "expiration of generated user token")
+	Cmd.Flags().IntVarP(&expirationDays, "expiration-days", "e", defaultExpirationDays, "expiration days of generated user token")
 }
