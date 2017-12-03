@@ -12,10 +12,10 @@ var Cmd *cobra.Command
 
 func init() {
 	Cmd = &cobra.Command{
-		Use:   "kuma",
-		Short: "kuma: HTTP Tunnel over gRPC",
+		Use:     "kuma",
+		Short:   "kuma: HTTP Tunnel over gRPC",
 		Version: version.Version,
-		Run: func (cmd *cobra.Command, args []string) {
+		Run: func(cmd *cobra.Command, args []string) {
 		},
 	}
 
