@@ -12,10 +12,10 @@ import (
 )
 
 const (
-	HashIDsMinLength = 17
+	hashIDsMinLength = 17
 )
 
-type Runner struct {
+type runner struct {
 	Config *Config
 
 	httpServer *http.Server
@@ -24,7 +24,7 @@ type Runner struct {
 	server *server.Server
 }
 
-func (r *Runner) Run() error {
+func (r *runner) Run() error {
 	userDB, err := user_db.LoadUserDB(r.Config.UserDB)
 	if err != nil {
 		return err
@@ -32,7 +32,7 @@ func (r *Runner) Run() error {
 
 	hd := hashids.NewData()
 	hd.Salt = r.Config.HashIDsSalt
-	hd.MinLength = HashIDsMinLength
+	hd.MinLength = hashIDsMinLength
 	hashID := hashids.NewWithData(hd)
 
 	r.server = &server.Server{
@@ -53,7 +53,7 @@ func (r *Runner) Run() error {
 	return err
 }
 
-func (r *Runner) RunHTTPServer(errCh chan<- error) {
+func (r *runner) RunHTTPServer(errCh chan<- error) {
 	httpServer := &http.Server{
 		Addr:    r.Config.HTTP.Listen,
 		Handler: r.server,
@@ -64,7 +64,7 @@ func (r *Runner) RunHTTPServer(errCh chan<- error) {
 	r.Stop()
 }
 
-func (r *Runner) RunGRPCServer(errCh chan<- error) {
+func (r *runner) RunGRPCServer(errCh chan<- error) {
 	lis, err := net.Listen("tcp", r.Config.GRPC.Listen)
 	if err != nil {
 		errCh <- err
@@ -90,7 +90,7 @@ func (r *Runner) RunGRPCServer(errCh chan<- error) {
 	r.Stop()
 }
 
-func (r *Runner) Stop() {
+func (r *runner) Stop() {
 	if r.httpServer != nil {
 		r.httpServer.Close()
 	}

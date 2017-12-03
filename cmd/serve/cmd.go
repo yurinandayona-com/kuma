@@ -32,8 +32,8 @@ func init() {
 			cfg.DebugLog()
 
 			log.Print("info: run 'serve' command")
-			runner := &Runner{Config: &cfg}
-			if err := runner.Run(); err != nil {
+			r := &runner{Config: &cfg}
+			if err := r.Run(); err != nil {
 				log.Fatalf("alert: %s", err)
 			}
 		},
