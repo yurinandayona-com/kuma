@@ -54,12 +54,16 @@ func init() {
 
 			claims, valid, err := jm.Parse(token)
 			if err != nil {
-				log.Fatalf("alert: %s", err)
+				log.Printf("error: %s", err)
+				valid = false
 			}
 
 			if valid {
 				_, err := userDB.Verify(claims.ID, claims.Name)
-				valid = err == nil
+				if err != nil {
+					log.Printf("error: %s", err)
+					valid = false
+				}
 			}
 
 			expire := time.Unix(claims.ExpiresAt, 0)

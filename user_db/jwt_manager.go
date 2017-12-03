@@ -46,15 +46,14 @@ func (jm *JWTManager) Parse(t string) (*JWTUserClaims, bool, error) {
 		}
 		return jm.HMACKey, nil
 	})
-	if err != nil {
-		return nil, false, errors.Wrap(err, "kuma: invalid JWT token")
+
+	if token != nil {
+		if claims, ok := token.Claims.(*JWTUserClaims); ok {
+			return claims, token.Valid, errors.Wrap(err, "kuma: invalid JWT token")
+		}
 	}
 
-	if claims, ok := token.Claims.(*JWTUserClaims); ok {
-		return claims, token.Valid, nil
-	} else {
-		return nil, false, errors.New("kuma: invalid JWT")
-	}
+	return nil, false, errors.New("kuma: invalid JWT")
 }
 
 // Sign returns signed JWT with given user information and expiration.
