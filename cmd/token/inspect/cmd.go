@@ -1,3 +1,4 @@
+// Package token_inspect provides 'kuma token inspect' implementation.
 package token_inspect
 
 import (

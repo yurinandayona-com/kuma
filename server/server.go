@@ -1,3 +1,4 @@
+// Package server provides kuma server implementation.
 package server
 
 import (

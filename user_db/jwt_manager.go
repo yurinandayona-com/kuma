@@ -11,11 +11,15 @@ const (
 	TokenTimeout = 24 * time.Hour * 100
 )
 
+// JWTManager is token manager of user DB.
+//
+// It implements server.UserVerifier.
 type JWTManager struct {
 	UserDB  *UserDB
 	HMACKey []byte
 }
 
+// JWTUserClaims is JWT claims containing user information.
 type JWTUserClaims struct {
 	jwt.StandardClaims
 
@@ -38,7 +42,7 @@ func (jm *JWTManager) Verify(t string) (server.User, error) {
 }
 
 // Parse parses t as JWT and then returns JWTUserClaims bound this JWT and
-// bool flag which is whether valid or invalid or error.
+// flag which is token validation status and error.
 func (jm *JWTManager) Parse(t string) (*JWTUserClaims, bool, error) {
 	token, err := jwt.ParseWithClaims(t, &JWTUserClaims{}, func(t *jwt.Token) (interface{}, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {

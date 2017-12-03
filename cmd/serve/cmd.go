@@ -1,3 +1,4 @@
+// Package serve provides 'kuma serve' implementation.
 package serve
 
 import (

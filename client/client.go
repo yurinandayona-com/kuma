@@ -1,3 +1,4 @@
+// Package client provides kuma client implementation.
 package client
 
 import (
@@ -12,6 +13,9 @@ import (
 	"log"
 )
 
+// client is internal type of Client.
+//
+// It is only for hiding internal fields: BaseCtx and Conn.
 type client struct {
 	BaseCtx context.Context
 	cancel  func()
@@ -19,6 +23,7 @@ type client struct {
 	Conn *grpc.ClientConn
 }
 
+// Client is kuma client.
 type Client struct {
 	GRPCServer string
 	UseTLS     bool

@@ -1,3 +1,4 @@
+// Package connect provides 'kuma connect' implementation.
 package connect
 
 import (

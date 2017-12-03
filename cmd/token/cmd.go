@@ -1,3 +1,4 @@
+// Package token provides 'kuma token' implementation.
 package token
 
 import (
