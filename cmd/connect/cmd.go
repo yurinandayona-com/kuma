@@ -22,7 +22,7 @@ func init() {
 		Short: "Connect to kuma gRPC server",
 		Args:  cobra.ExactArgs(0),
 		Run: func(cmd *cobra.Command, args []string) {
-			log.Printf("info: load configuration: %s", cfgFile)
+			log.Printf("debug: load configuration: %s", cfgFile)
 			var cfg Config
 			BindToStore(cmd.Flags())
 			err := config.Load(Store, cfgFile, &cfg)
@@ -41,7 +41,7 @@ func init() {
 				Subdomain: cfg.Subdomain,
 			}
 
-			log.Print("info: run 'connect' command")
+			log.Print("debug: run 'connect' command")
 			if err := cli.Start(); err != nil {
 				log.Fatalf("alert: %s", err)
 			}

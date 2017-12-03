@@ -32,7 +32,7 @@ func init() {
 				log.Fatalf("alert: %s", err)
 			}
 
-			log.Printf("info: load condiguration: %s", cfgFile)
+			log.Printf("debug: load condiguration: %s", cfgFile)
 			var cfg serve.Config
 			if err := config.Load(serve.Store, cfgFile, &cfg); err != nil {
 				log.Fatalf("alert: %s", err)
@@ -40,7 +40,7 @@ func init() {
 
 			cfg.DebugLog()
 
-			log.Printf("info: load user DB: %s", cfg.UserDB)
+			log.Printf("debug: load user DB: %s", cfg.UserDB)
 			userDB, err := user_db.LoadUserDB(cfg.UserDB)
 			if err != nil {
 				log.Fatalf("alert: %s", err)
@@ -63,7 +63,6 @@ func init() {
 
 			expire := time.Unix(claims.ExpiresAt, 0)
 
-			fmt.Println()
 			fmt.Printf("ID     : %s\n", claims.ID)
 			fmt.Printf("Name   : %s\n", claims.Name)
 			fmt.Printf("Expire : %s (%s)\n", expire, humanize.Time(expire))

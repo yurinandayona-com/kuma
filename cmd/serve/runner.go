@@ -26,7 +26,7 @@ type runner struct {
 }
 
 func (r *runner) Run() error {
-	log.Printf("info: load user DB: %s", r.Config.UserDB)
+	log.Printf("debug: load user DB: %s", r.Config.UserDB)
 	userDB, err := user_db.LoadUserDB(r.Config.UserDB)
 	if err != nil {
 		return err

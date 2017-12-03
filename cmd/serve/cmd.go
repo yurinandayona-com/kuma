@@ -21,7 +21,7 @@ func init() {
 		Short: "Serve an HTTP server and gRPC server for kuma",
 		Args:  cobra.ExactArgs(0),
 		Run: func(cmd *cobra.Command, args []string) {
-			log.Printf("info: load configuration: %s", cfgFile)
+			log.Printf("debug: load configuration: %s", cfgFile)
 			var cfg Config
 			BindToStore(cmd.Flags())
 			err := config.Load(Store, cfgFile, &cfg)
@@ -31,7 +31,7 @@ func init() {
 
 			cfg.DebugLog()
 
-			log.Print("info: run 'serve' command")
+			log.Print("debug: run 'serve' command")
 			r := &runner{Config: &cfg}
 			if err := r.Run(); err != nil {
 				log.Fatalf("alert: %s", err)
