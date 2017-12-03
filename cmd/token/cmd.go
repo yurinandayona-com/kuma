@@ -2,21 +2,23 @@ package token
 
 import (
 	"github.com/spf13/cobra"
-	flag "github.com/spf13/pflag"
+	"github.com/yurinandayona-com/kuma/cmd/serve"
+	"github.com/yurinandayona-com/kuma/cmd/token/inspect"
 )
 
 var Cmd *cobra.Command
 
 func init() {
-	var cfgFile string
-
 	Cmd = &cobra.Command{
-		Use:   "token [inspect|generate]",
+		Use:   "token",
 		Short: "Manage user tokens",
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return flag.ErrHelp
+		PersistentPreRun: func(cmd *cobra.Command, args []string) {
+			serve.BindToStore(cmd.Flags())
 		},
 	}
 
-	Cmd.PersistentFlags().StringVarP(&cfgFile, "config", "C", ".kuma/serve.yml", "specify configuration file location")
+	Cmd.PersistentFlags().StringP("config", "C", ".kuma/serve.toml", "configuration file location")
+	serve.AddFlags(Cmd.PersistentFlags())
+
+	Cmd.AddCommand(token_inspect.Cmd)
 }
