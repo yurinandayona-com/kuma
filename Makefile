@@ -1,3 +1,5 @@
+.PHONY: all generate fmt
+
 all: bin/kuma
 
 bin/kuma: generate
