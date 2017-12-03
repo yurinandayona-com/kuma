@@ -7,6 +7,7 @@ import (
 	"github.com/yurinandayona-com/kuma/user_db"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
+	"log"
 	"net"
 	"net/http"
 )
@@ -25,6 +26,7 @@ type runner struct {
 }
 
 func (r *runner) Run() error {
+	log.Printf("info: load user DB: %s", r.Config.UserDB)
 	userDB, err := user_db.LoadUserDB(r.Config.UserDB)
 	if err != nil {
 		return err
@@ -54,13 +56,19 @@ func (r *runner) Run() error {
 }
 
 func (r *runner) RunHTTPServer(errCh chan<- error) {
+	lis, err := net.Listen("tcp", r.Config.HTTP.Listen)
+	if err != nil {
+		errCh <- err
+		return
+	}
+
 	httpServer := &http.Server{
-		Addr:    r.Config.HTTP.Listen,
 		Handler: r.server,
 	}
 
 	r.httpServer = httpServer
-	errCh <- httpServer.ListenAndServe()
+	log.Printf("info: start HTTP server: http://%s", lis.Addr())
+	errCh <- httpServer.Serve(lis)
 	r.Stop()
 }
 
@@ -86,6 +94,7 @@ func (r *runner) RunGRPCServer(errCh chan<- error) {
 	api.RegisterTunnelServer(grpcServer, r.server)
 
 	r.grpcServer = grpcServer
+	log.Printf("info: start gRPC server: %s", lis.Addr())
 	errCh <- grpcServer.Serve(lis)
 	r.Stop()
 }
