@@ -52,7 +52,7 @@ func init() {
 	// Flag settings
 
 	// Flag for configuration file
-	Cmd.Flags().StringVarP(&cfgFile, "config", "C", ".kuma/connect.toml", "specify configuration file location")
+	Cmd.Flags().StringVarP(&cfgFile, "config", "C", ".kuma/connect.toml", "configuration file location")
 
 	AddFlags(Cmd.Flags())
 
@@ -68,13 +68,13 @@ func init() {
 // AddFlags sets up Config related flags.
 func AddFlags(flags *flag.FlagSet) {
 	// Flags for gRPC server
-	flags.String("grpc-server", "", "specify gRPC server address to connect")
-	flags.BoolP("use-tls", "T", false, "use TLS to connect gRPC server")
-	flags.StringP("token", "t", "", "specify user token")
+	flags.String("grpc-server", "", "gRPC server address to connect")
+	flags.BoolP("use-tls", "T", false, "flag to use TLS to connect gRPC server")
+	flags.StringP("token", "t", "", "user token")
 
 	// Flags for local
-	flags.IntP("port", "p", 0, "specify localhost port number to connect")
-	flags.StringP("subdomain", "S", "", "specify public URL subdomain")
+	flags.IntP("port", "p", 0, "localhost port number to connect")
+	flags.StringP("subdomain", "S", "", "public URL subdomain")
 }
 
 // BindToStore binds flags to Store. It should be called before config.Load

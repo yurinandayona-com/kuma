@@ -43,7 +43,7 @@ func init() {
 	// Flag settings
 
 	// Flag for configuration file
-	Cmd.Flags().StringVarP(&cfgFile, "config", "C", ".kuma/serve.toml", "specify configuration file location")
+	Cmd.Flags().StringVarP(&cfgFile, "config", "C", ".kuma/serve.toml", "configuration file location")
 
 	AddFlags(Cmd.Flags())
 
@@ -66,17 +66,17 @@ func init() {
 // AddFlags sets up Config related flags.
 func AddFlags(flags *flag.FlagSet) {
 	// Flags for general settings
-	flags.StringP("user-db", "u", "", "specify user DB location")
-	flags.StringP("base-domain", "b", "", "specify base domain of server")
+	flags.StringP("user-db", "u", "", "user DB location")
+	flags.StringP("base-domain", "b", "", "base domain of server")
 
 	// Flags for HTTP server
-	flags.String("http-listen", "", "specify address to listen HTTP server")
+	flags.String("http-listen", "", "address to listen HTTP server")
 
 	// Flags for gRPC server
-	flags.String("grpc-listen", "", "specify address to listen gRPC server")
-	flags.Bool("grpc-use-tls", false, "use TLS for gRPC server")
-	flags.String("grpc-tls-cert", "", "specify TLS certification file location")
-	flags.String("grpc-tls-key", "", "specify TLS key file location")
+	flags.String("grpc-listen", "", "address to listen gRPC server")
+	flags.Bool("grpc-use-tls", false, "flag to use TLS for gRPC server")
+	flags.String("grpc-tls-cert", "", "TLS certification file location")
+	flags.String("grpc-tls-key", "", "TLS key file location")
 }
 
 // BindToStore binds flags to Store. It should be called before config.Load
