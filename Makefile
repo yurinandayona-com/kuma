@@ -10,3 +10,6 @@ generate:
 
 fmt:
 	gofmt -w -l -s $$(git ls-files '*.go' | grep -Ev '^vendor/')
+
+loc:
+	cloc $$(git ls-files | grep -Ev '^vendor/|.pb.go$$')
