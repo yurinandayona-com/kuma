@@ -2,6 +2,8 @@
 
 > YURI meets KUMA.
 
+[![GoDoc](https://godoc.org/github.com/yurinandayona-com/kuma?status.svg)](https://godoc.org/github.com/yurinandayona-com/kuma)
+
 ## Install
 
 ```console
