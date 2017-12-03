@@ -41,7 +41,7 @@ func (hub *hub) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	r.Header.Add("X-Forwarded-For", r.RemoteAddr)
 	r.Header.Add("X-Forwarded-Host", r.Host)
 	r.Header.Add("X-Forwarded-Proto", r.URL.Scheme)
-	r.Header.Add("Via", fmt.Sprintf("%s %s", r.Proto, version.Version))
+	r.Header.Add("Via", fmt.Sprintf("%s %s", r.Proto, version.Full))
 
 	tunnel, closeTunnel, ok := hub.openTunnel(w, r)
 	if !ok {
@@ -176,7 +176,7 @@ func (hub *hub) SendHeader(tunnelID int64, resHeader *api.ResponseHeader) error 
 	for _, h := range resHeader.Headers {
 		header[h.Name] = h.Values
 	}
-	header.Add("Via", fmt.Sprintf("%s %s", tunnel.Request.Proto, version.Version))
+	header.Add("Via", fmt.Sprintf("%s %s", tunnel.Request.Proto, version.Full))
 
 	tunnel.Response.WriteHeader(int(resHeader.Status))
 

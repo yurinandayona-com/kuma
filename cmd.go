@@ -15,6 +15,8 @@ func init() {
 		Use:   "kuma",
 		Short: "kuma: HTTP Tunnel over gRPC",
 		Version: version.Version,
+		Run: func (cmd *cobra.Command, args []string) {
+		},
 	}
 
 	Cmd.AddCommand(connect.Cmd)
