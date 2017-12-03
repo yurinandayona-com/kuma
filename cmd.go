@@ -5,6 +5,7 @@ import (
 	"github.com/yurinandayona-com/kuma/cmd/connect"
 	"github.com/yurinandayona-com/kuma/cmd/generate_tokens"
 	"github.com/yurinandayona-com/kuma/cmd/serve"
+	"github.com/yurinandayona-com/kuma/version"
 )
 
 var Cmd *cobra.Command
@@ -13,6 +14,7 @@ func init() {
 	Cmd = &cobra.Command{
 		Use:   "kuma",
 		Short: "kuma: HTTP Tunnel over gRPC",
+		Version: version.Version,
 	}
 
 	Cmd.AddCommand(connect.Cmd)
