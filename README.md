@@ -7,7 +7,7 @@
 ## Install
 
 ```console
-go get github.com/yurinandayona-com/kuma
+$ go get -u github.com/yurinandayona-com/kuma
 ```
 
 ## License
