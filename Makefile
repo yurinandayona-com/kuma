@@ -9,4 +9,4 @@ generate:
 	go generate -x ./...
 
 fmt:
-	gofmt -w -l -s $$(go list ./... | tail -n+2 | sed "s#^$$(go list .)/##")
+	gofmt -w -l -s $$(git ls-files '*.go' | grep -Ev '^vendor/')
