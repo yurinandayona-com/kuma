@@ -7,10 +7,6 @@ import (
 	"time"
 )
 
-const (
-	TokenTimeout = 24 * time.Hour * 100
-)
-
 // JWTManager is token manager of user DB.
 //
 // It implements server.UserVerifier.
@@ -61,7 +57,8 @@ func (jm *JWTManager) Parse(t string) (*JWTUserClaims, bool, error) {
 	}
 }
 
-func (jm *JWTManager) Sign(u *User) (string, error) {
+// Sign returns signed JWT with given user information and expiration.
+func (jm *JWTManager) Sign(u *User, expiration time.Time) (string, error) {
 	u, err := jm.UserDB.Verify(u.ID, u.Name)
 	if err != nil {
 		return "", err
@@ -69,7 +66,7 @@ func (jm *JWTManager) Sign(u *User) (string, error) {
 
 	claims := &JWTUserClaims{
 		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(TokenTimeout).Unix(),
+			ExpiresAt: expiration.Unix(),
 		},
 		ID:   u.ID,
 		Name: u.Name,

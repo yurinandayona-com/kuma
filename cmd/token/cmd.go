@@ -5,6 +5,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/yurinandayona-com/kuma/cmd/serve"
 	"github.com/yurinandayona-com/kuma/cmd/token/inspect"
+	"github.com/yurinandayona-com/kuma/cmd/token/sign"
 )
 
 var Cmd *cobra.Command
@@ -22,4 +23,5 @@ func init() {
 	serve.AddFlags(Cmd.PersistentFlags())
 
 	Cmd.AddCommand(token_inspect.Cmd)
+	Cmd.AddCommand(token_sign.Cmd)
 }
