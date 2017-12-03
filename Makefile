@@ -1,9 +1,13 @@
-.PHONY: all generate fmt
+.PHONY: all
 
 all: bin/kuma
 
 bin/kuma: generate
 	go build -o bin/kuma .
+
+#
+# Tasks
+.PHONY: generate fmt dep
 
 generate:
 	go generate -x ./...
@@ -11,9 +15,13 @@ generate:
 fmt:
 	gofmt -w -l -s $$(git ls-files '*.go' | grep -Ev '^vendor/')
 
-loc:
-	cloc $$(git ls-files | grep -Ev '^vendor/|.pb.go$$')
-
 dep:
 	dep ensure -v
 	dep prune -v
+
+#
+# Utilities
+.PHONY: loc
+
+loc:
+	cloc $$(git ls-files | grep -Ev '^vendor/|.pb.go$$')
