@@ -7,10 +7,13 @@ bin/kuma: generate
 
 #
 # Tasks
-.PHONY: generate fmt dep
+.PHONY: generate vet fmt dep
 
 generate:
 	go generate -x ./...
+
+vet:
+	go vet ./...
 
 fmt:
 	gofmt -w -l -s $$(git ls-files '*.go' | grep -Ev '^vendor/')
