@@ -1,4 +1,4 @@
-// Package serve provides 'kuma serve' implementation.
+// Package serve implements 'kuma serve'.
 package serve
 
 import (
@@ -11,7 +11,10 @@ import (
 )
 
 var (
+	// 'kuma serve' command.
 	Cmd   *cobra.Command
+
+	// 'kuma store' configuration store.
 	Store = viper.New()
 )
 

@@ -1,4 +1,4 @@
-// Package token_sign provides 'kuma token sign' implementation.
+// Package token_sign implements 'kuma token sign'.
 package token_sign
 
 import (
@@ -16,6 +16,7 @@ const (
 	defaultExpirationDays = 100
 )
 
+// 'kuma token sign` command.
 var Cmd *cobra.Command
 
 func init() {

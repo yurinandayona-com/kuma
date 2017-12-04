@@ -12,6 +12,7 @@ import (
 )
 
 var (
+	// 'kuma token' configuration store.
 	Store = viper.New()
 )
 
@@ -20,6 +21,7 @@ func init() {
 	Store.SetEnvPrefix("KUMA_SERVE")
 }
 
+// LoadJWTManager returns JWTManager created from `kuma token` configuration.
 func LoadJWTManager(cmd *cobra.Command) (*user_db.JWTManager, error) {
 	cfg, err := loadTokenConfig(cmd)
 	if err != nil {

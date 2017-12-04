@@ -1,4 +1,4 @@
-// Package token provides 'kuma token' implementation.
+// Package token implements 'kuma token'.
 package token
 
 import (
@@ -8,9 +8,8 @@ import (
 	"github.com/yurinandayona-com/kuma/cmd/token/sign"
 )
 
-var (
-	Cmd *cobra.Command
-)
+// 'kuma token' command.
+var Cmd *cobra.Command
 
 func init() {
 	var cfgFile string

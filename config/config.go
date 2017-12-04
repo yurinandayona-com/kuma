@@ -1,2 +1,2 @@
-// Package config provides utilities about configuration file.
+// Package config is utility collections about configuration file.
 package config

@@ -1,4 +1,4 @@
-// Package token_inspect provides 'kuma token inspect' implementation.
+// Package token_inspect implements 'kuma token inspect'.
 package token_inspect
 
 import (
@@ -12,6 +12,7 @@ import (
 	"github.com/yurinandayona-com/kuma/cmd/token/config"
 )
 
+// 'kuma token inspect` command.
 var Cmd *cobra.Command
 
 func init() {

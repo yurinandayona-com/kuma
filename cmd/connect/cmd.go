@@ -1,4 +1,4 @@
-// Package connect provides 'kuma connect' implementation.
+// Package connect implements 'kuma connect'.
 package connect
 
 import (
@@ -12,7 +12,10 @@ import (
 )
 
 var (
+	// 'kuma connect' command
 	Cmd   *cobra.Command
+
+	// 'kuma connect' configuration store.
 	Store = viper.New()
 )
 

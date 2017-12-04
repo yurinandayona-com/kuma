@@ -4,6 +4,7 @@ import (
 	"log"
 )
 
+// Config represents configuration file contents for 'kuma connect'.
 type Config struct {
 	// gRPC server configuration
 	GRPCServer string `mapstructure:"grpc_server"`
@@ -15,6 +16,7 @@ type Config struct {
 	Subdomain string `mapstructure:"subdomain" validate:"required,alphanum,max=17"`
 }
 
+// DebugLog inspects configuration contents as debug logs.
 func (cfg *Config) DebugLog() {
 	log.Printf("debug: grpc_server = %#v", cfg.GRPCServer)
 	log.Printf("debug: use_tls = %#v", cfg.UseTLS)

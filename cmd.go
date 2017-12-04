@@ -12,6 +12,7 @@ import (
 	"github.com/yurinandayona-com/kuma/version"
 )
 
+// 'kuma' command.
 var Cmd *cobra.Command
 
 func init() {
