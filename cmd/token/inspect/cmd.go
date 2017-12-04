@@ -3,14 +3,13 @@ package token_inspect
 
 import (
 	"fmt"
+	"log"
+	"time"
+
 	"github.com/dustin/go-humanize"
 	"github.com/spf13/cobra"
 	flag "github.com/spf13/pflag"
-	"github.com/yurinandayona-com/kuma/cmd/serve"
-	"github.com/yurinandayona-com/kuma/config"
-	"github.com/yurinandayona-com/kuma/user_db"
-	"log"
-	"time"
+	"github.com/yurinandayona-com/kuma/cmd/token/config"
 )
 
 var Cmd *cobra.Command
@@ -28,28 +27,9 @@ func init() {
 			return nil
 		},
 		Run: func(cmd *cobra.Command, args []string) {
-			cfgFile, err := cmd.Flags().GetString("config")
+			jm, err := token_config.LoadJWTManager(cmd)
 			if err != nil {
 				log.Fatalf("alert: %s", err)
-			}
-
-			log.Printf("debug: load condiguration: %s", cfgFile)
-			var cfg serve.Config
-			if err := config.Load(serve.Store, cfgFile, &cfg); err != nil {
-				log.Fatalf("alert: %s", err)
-			}
-
-			cfg.DebugLog()
-
-			log.Printf("debug: load user DB: %s", cfg.UserDB)
-			userDB, err := user_db.LoadUserDB(cfg.UserDB)
-			if err != nil {
-				log.Fatalf("alert: %s", err)
-			}
-
-			jm := &user_db.JWTManager{
-				UserDB:  userDB,
-				HMACKey: []byte(cfg.HMACKey),
 			}
 
 			claims, valid, err := jm.Parse(token)
@@ -59,7 +39,7 @@ func init() {
 			}
 
 			if valid {
-				_, err := userDB.Verify(claims.ID, claims.Name)
+				_, err := jm.UserDB.Verify(claims.ID, claims.Name)
 				if err != nil {
 					log.Printf("error: %s", err)
 					valid = false

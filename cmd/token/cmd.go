@@ -3,25 +3,29 @@ package token
 
 import (
 	"github.com/spf13/cobra"
-	"github.com/yurinandayona-com/kuma/cmd/serve"
+	"github.com/yurinandayona-com/kuma/cmd/token/config"
 	"github.com/yurinandayona-com/kuma/cmd/token/inspect"
 	"github.com/yurinandayona-com/kuma/cmd/token/sign"
 )
 
-var Cmd *cobra.Command
+var (
+	Cmd *cobra.Command
+)
 
 func init() {
+	var cfgFile string
+
 	Cmd = &cobra.Command{
 		Use:   "token",
 		Short: "Manage user tokens",
-		PersistentPreRun: func(cmd *cobra.Command, args []string) {
-			serve.BindToStore(cmd.Flags())
-		},
 	}
 
-	Cmd.PersistentFlags().StringP("config", "C", ".kuma/serve.toml", "configuration file location")
-	serve.AddFlags(Cmd.PersistentFlags())
+	Cmd.PersistentFlags().StringVarP(&cfgFile, "config", "C", ".kuma/serve.toml", "configuration file location")
+
+	Cmd.PersistentFlags().StringP("user-db", "u", "", "user DB location")
 
 	Cmd.AddCommand(token_inspect.Cmd)
 	Cmd.AddCommand(token_sign.Cmd)
+
+	token_config.Store.BindPFlag("user_db", Cmd.PersistentFlags().Lookup("user-db"))
 }

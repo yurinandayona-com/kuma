@@ -3,13 +3,13 @@ package token_sign
 
 import (
 	"fmt"
-	"github.com/spf13/cobra"
-	flag "github.com/spf13/pflag"
-	"github.com/yurinandayona-com/kuma/cmd/serve"
-	"github.com/yurinandayona-com/kuma/config"
-	"github.com/yurinandayona-com/kuma/user_db"
 	"log"
 	"time"
+
+	"github.com/spf13/cobra"
+	flag "github.com/spf13/pflag"
+	"github.com/yurinandayona-com/kuma/cmd/token/config"
+	"github.com/yurinandayona-com/kuma/user_db"
 )
 
 const (
@@ -32,32 +32,13 @@ func init() {
 			return nil
 		},
 		Run: func(cmd *cobra.Command, args []string) {
-			cfgFile, err := cmd.Flags().GetString("config")
+			jm, err := token_config.LoadJWTManager(cmd)
 			if err != nil {
 				log.Fatalf("alert: %s", err)
-			}
-
-			log.Printf("debug: load condiguration: %s", cfgFile)
-			var cfg serve.Config
-			if err := config.Load(serve.Store, cfgFile, &cfg); err != nil {
-				log.Fatalf("alert: %s", err)
-			}
-
-			cfg.DebugLog()
-
-			log.Printf("debug: load user DB: %s", cfg.UserDB)
-			userDB, err := user_db.LoadUserDB(cfg.UserDB)
-			if err != nil {
-				log.Fatalf("alert: %s", err)
-			}
-
-			jm := &user_db.JWTManager{
-				UserDB:  userDB,
-				HMACKey: []byte(cfg.HMACKey),
 			}
 
 			var user *user_db.User
-			for _, u := range userDB.GetUsers() {
+			for _, u := range jm.UserDB.GetUsers() {
 				if u.Name == name {
 					user = u
 					break
