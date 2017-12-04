@@ -1,10 +1,11 @@
 package user_db
 
 import (
+	"time"
+
 	"github.com/dgrijalva/jwt-go"
 	"github.com/pkg/errors"
 	"github.com/yurinandayona-com/kuma/server"
-	"time"
 )
 
 // JWTManager is token manager of user DB.

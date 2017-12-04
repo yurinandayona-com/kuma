@@ -2,17 +2,18 @@
 package server
 
 import (
+	"log"
+	"net/http"
+	"regexp"
+	"strings"
+	"sync"
+
 	google_protobuf "github.com/golang/protobuf/ptypes/empty"
 	"github.com/pkg/errors"
 	"github.com/speps/go-hashids"
 	"github.com/yurinandayona-com/kuma/api"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc/metadata"
-	"log"
-	"net/http"
-	"regexp"
-	"strings"
-	"sync"
 )
 
 var (

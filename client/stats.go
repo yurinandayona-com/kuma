@@ -3,9 +3,10 @@ package client
 import (
 	"bytes"
 	"fmt"
-	"github.com/dustin/go-humanize"
 	"log"
 	"time"
+
+	"github.com/dustin/go-humanize"
 )
 
 type stats struct {

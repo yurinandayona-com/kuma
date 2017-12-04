@@ -2,15 +2,16 @@ package client
 
 import (
 	"fmt"
+	"io"
+	"log"
+	"net/http"
+	"time"
+
 	google_protobuf "github.com/golang/protobuf/ptypes/empty"
 	"github.com/pkg/errors"
 	"github.com/yurinandayona-com/kuma/api"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc/metadata"
-	"io"
-	"log"
-	"net/http"
-	"time"
 )
 
 var (

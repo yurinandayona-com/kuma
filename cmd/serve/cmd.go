@@ -2,11 +2,12 @@
 package serve
 
 import (
+	"log"
+
 	"github.com/spf13/cobra"
 	flag "github.com/spf13/pflag"
 	"github.com/spf13/viper"
 	"github.com/yurinandayona-com/kuma/config"
-	"log"
 )
 
 var (

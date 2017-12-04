@@ -4,9 +4,10 @@
 package user_db
 
 import (
+	"io/ioutil"
+
 	"github.com/BurntSushi/toml"
 	"github.com/pkg/errors"
-	"io/ioutil"
 )
 
 // UserDB means user DB.

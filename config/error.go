@@ -3,6 +3,7 @@ package config
 import (
 	"bytes"
 	"fmt"
+
 	"gopkg.in/go-playground/validator.v9"
 )
 

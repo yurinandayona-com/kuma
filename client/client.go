@@ -3,14 +3,15 @@ package client
 
 import (
 	"crypto/x509"
+	"io"
+	"log"
+
 	"github.com/pkg/errors"
 	"github.com/yurinandayona-com/kuma/api"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/metadata"
-	"io"
-	"log"
 )
 
 // client is internal type of Client.

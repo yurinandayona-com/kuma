@@ -1,9 +1,10 @@
 package server
 
 import (
-	"github.com/pkg/errors"
 	"net/http"
 	"sync"
+
+	"github.com/pkg/errors"
 )
 
 type tunnelStatus int

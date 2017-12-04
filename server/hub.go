@@ -2,13 +2,14 @@ package server
 
 import (
 	"fmt"
-	"github.com/pkg/errors"
-	"github.com/yurinandayona-com/kuma/api"
-	"github.com/yurinandayona-com/kuma/version"
 	"io"
 	"log"
 	"net/http"
 	"sync"
+
+	"github.com/pkg/errors"
+	"github.com/yurinandayona-com/kuma/api"
+	"github.com/yurinandayona-com/kuma/version"
 )
 
 type hub struct {

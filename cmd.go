@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/comail/colog"
 	"github.com/spf13/cobra"
 	flag "github.com/spf13/pflag"
@@ -8,7 +10,6 @@ import (
 	"github.com/yurinandayona-com/kuma/cmd/serve"
 	"github.com/yurinandayona-com/kuma/cmd/token"
 	"github.com/yurinandayona-com/kuma/version"
-	"log"
 )
 
 var Cmd *cobra.Command
