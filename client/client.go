@@ -2,7 +2,6 @@
 package client
 
 import (
-	"crypto/x509"
 	"io"
 	"log"
 
@@ -91,11 +90,8 @@ func (cli *Client) Start() error {
 func (cli *Client) dialConn() (*grpc.ClientConn, error) {
 	opt := make([]grpc.DialOption, 0, 1)
 	if cli.UseTLS {
-		cert, err := x509.SystemCertPool()
-		if err != nil {
-			return nil, errors.Wrap(err, "kuma: failed to get system cert pool")
-		}
-		creds := credentials.NewClientTLSFromCert(cert, "")
+		// nil means host's root CA.
+		creds := credentials.NewClientTLSFromCert(nil, "")
 
 		opt = append(opt, grpc.WithTransportCredentials(creds))
 	} else {
