@@ -48,9 +48,9 @@ func init() {
 				log.Fatalf("alert: user not found: %s", name)
 			}
 
-			log.Print("debug: user.name = %#v", user.Name)
-			log.Print("debug: user.id = %#v", user.ID)
-			log.Print("debug: expiration_days = %d days", expirationDays)
+			log.Printf("debug: user.name = %#v", user.Name)
+			log.Printf("debug: user.id = %#v", user.ID)
+			log.Printf("debug: expiration_days = %d days", expirationDays)
 
 			expiration := time.Duration(expirationDays) * 24 * time.Hour
 			signed, err := jm.Sign(user, time.Now().Add(expiration))

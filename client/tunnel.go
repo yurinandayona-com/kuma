@@ -151,7 +151,7 @@ func (t *tunnel) receiveBody(ss *stats, errCh chan error, w io.WriteCloser) {
 func (t *tunnel) sendHeader(ss *stats, httpRes *http.Response) error {
 	headers := make([]*api.Header, 0, len(httpRes.Header))
 	for name, values := range httpRes.Header {
-		headers = append(headers, &api.Header{name, values})
+		headers = append(headers, &api.Header{Name: name, Values: values})
 	}
 	resHeader := &api.ResponseHeader{
 		Status:  int32(httpRes.StatusCode),

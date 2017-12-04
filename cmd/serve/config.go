@@ -7,11 +7,11 @@ import (
 type Config struct {
 	UserDB string `mapstructure:"user_db"`
 
-	HashIDsSalt string `mapstructure:"hash_ids_salt",validate:"required"`
+	HashIDsSalt string `mapstructure:"hash_ids_salt" validate:"required"`
 
-	HMACKey string `mapstructure:"hmac_key",validate:"required"`
+	HMACKey string `mapstructure:"hmac_key" validate:"required"`
 
-	BaseDomain string `mapstructure:"base_domain",validate:"required"`
+	BaseDomain string `mapstructure:"base_domain" validate:"required"`
 
 	HTTP struct {
 		Listen string `mapstructure:"listen"`
