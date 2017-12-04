@@ -14,6 +14,7 @@ generate:
 
 fmt:
 	gofmt -w -l -s $$(git ls-files '*.go' | grep -Ev '^vendor/')
+	goimports -w $$(git ls-files '*.go' | grep -Ev '^vendor/')
 
 dep:
 	dep ensure -v
