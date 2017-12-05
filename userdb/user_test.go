@@ -1,4 +1,4 @@
-package user_db
+package userdb
 
 import (
 	"testing"
@@ -7,7 +7,7 @@ import (
 func TestUser(t *testing.T) {
 	u := &User{
 		Name: "MakeNowJust",
-		ID: "00000000-0000-0000-0000-000000000000",
+		ID:   "00000000-0000-0000-0000-000000000000",
 	}
 
 	if name := u.GetName(); name != "MakeNowJust" {

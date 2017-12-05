@@ -1,7 +1,7 @@
-// Package user_db provides user DB and verifier implementation.
+// Package userdb provides user DB and verifier implementation.
 //
 // And it also provides JWT manager to verify user token.
-package user_db
+package userdb
 
 import (
 	"io/ioutil"

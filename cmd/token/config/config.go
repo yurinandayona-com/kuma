@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/yurinandayona-com/kuma/config"
-	"github.com/yurinandayona-com/kuma/user_db"
+	"github.com/yurinandayona-com/kuma/userdb"
 )
 
 var (
@@ -22,7 +22,7 @@ func init() {
 }
 
 // LoadJWTManager returns JWTManager created from `kuma token` configuration.
-func LoadJWTManager(cmd *cobra.Command) (*user_db.JWTManager, error) {
+func LoadJWTManager(cmd *cobra.Command) (*userdb.JWTManager, error) {
 	cfg, err := loadTokenConfig(cmd)
 	if err != nil {
 		return nil, err
@@ -31,12 +31,12 @@ func LoadJWTManager(cmd *cobra.Command) (*user_db.JWTManager, error) {
 	cfg.DebugLog()
 
 	log.Printf("debug: load user DB: %s", cfg.UserDB)
-	userDB, err := user_db.LoadUserDB(cfg.UserDB)
+	userDB, err := userdb.LoadUserDB(cfg.UserDB)
 	if err != nil {
 		return nil, err
 	}
 
-	jm := &user_db.JWTManager{
+	jm := &userdb.JWTManager{
 		UserDB:  userDB,
 		HMACKey: []byte(cfg.HMACKey),
 	}

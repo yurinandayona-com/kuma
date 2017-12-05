@@ -1,4 +1,4 @@
-package user_db
+package userdb
 
 import (
 	"time"

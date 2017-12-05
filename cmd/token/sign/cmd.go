@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 	flag "github.com/spf13/pflag"
 	"github.com/yurinandayona-com/kuma/cmd/token/config"
-	"github.com/yurinandayona-com/kuma/user_db"
+	"github.com/yurinandayona-com/kuma/userdb"
 )
 
 const (
@@ -38,7 +38,7 @@ func init() {
 				log.Fatalf("alert: %s", err)
 			}
 
-			var user *user_db.User
+			var user *userdb.User
 			for _, u := range jm.UserDB.GetUsers() {
 				if u.Name == name {
 					user = u

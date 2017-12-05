@@ -1,8 +1,8 @@
-package user_db
+package userdb
 
 import (
-	"testing"
 	"strings"
+	"testing"
 )
 
 func TestLoadUserDB(t *testing.T) {

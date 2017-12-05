@@ -8,7 +8,7 @@ import (
 	"github.com/speps/go-hashids"
 	"github.com/yurinandayona-com/kuma/api"
 	"github.com/yurinandayona-com/kuma/server"
-	"github.com/yurinandayona-com/kuma/user_db"
+	"github.com/yurinandayona-com/kuma/userdb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 )
@@ -28,7 +28,7 @@ type runner struct {
 
 func (r *runner) Run() error {
 	log.Printf("debug: load user DB: %s", r.Config.UserDB)
-	userDB, err := user_db.LoadUserDB(r.Config.UserDB)
+	userDB, err := userdb.LoadUserDB(r.Config.UserDB)
 	if err != nil {
 		return err
 	}
@@ -41,7 +41,7 @@ func (r *runner) Run() error {
 	r.server = &server.Server{
 		BaseDomain: r.Config.BaseDomain,
 		HashID:     hashID,
-		UserVerifier: &user_db.JWTManager{
+		UserVerifier: &userdb.JWTManager{
 			UserDB:  userDB,
 			HMACKey: []byte(r.Config.HMACKey),
 		},
