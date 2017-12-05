@@ -30,7 +30,7 @@ type tunnel struct {
 	ctx    context.Context
 }
 
-func (t *tunnel) Run() error {
+func (t *tunnel) Run(ctx context.Context) error {
 	start := time.Now()
 
 	t.tunnel = api.NewTunnelClient(t.Client.Conn)
@@ -40,9 +40,9 @@ func (t *tunnel) Run() error {
 		"host", t.Request.Host,
 		"tunnel-id", t.Request.TunnelID,
 	)
-	t.ctx = metadata.NewOutgoingContext(t.Client.BaseCtx, md)
+	t.ctx = metadata.NewOutgoingContext(ctx, md)
 
-	ss, err := t.runInternal()
+	ss, err := t.runInternal(ctx)
 	ss.Log(time.Since(start))
 	if err != nil {
 		t.sendError(err)
@@ -52,10 +52,10 @@ func (t *tunnel) Run() error {
 	return nil
 }
 
-func (t *tunnel) runInternal() (ss *stats, err error) {
+func (t *tunnel) runInternal(ctx context.Context) (ss *stats, err error) {
 	ss = &stats{TunnelID: t.Request.TunnelID}
 
-	httpRequest, w, err := t.receiveHeader(ss)
+	httpRequest, w, err := t.receiveHeader(ctx, ss)
 	if err != nil {
 		return
 	}
@@ -96,7 +96,7 @@ func (t *tunnel) runInternal() (ss *stats, err error) {
 	return
 }
 
-func (t *tunnel) receiveHeader(ss *stats) (*http.Request, io.WriteCloser, error) {
+func (t *tunnel) receiveHeader(ctx context.Context, ss *stats) (*http.Request, io.WriteCloser, error) {
 	reqHeader, err := t.tunnel.ReceiveHeader(t.ctx, &google_protobuf.Empty{})
 	if err != nil {
 		return nil, nil, errors.Wrap(err, "kuma: failed to receive header")
@@ -109,7 +109,7 @@ func (t *tunnel) receiveHeader(ss *stats) (*http.Request, io.WriteCloser, error)
 		return nil, nil, errors.Wrap(err, "kuma: failed to create HTTP request")
 	}
 
-	httpReq = httpReq.WithContext(t.Client.BaseCtx)
+	httpReq = httpReq.WithContext(ctx)
 
 	for _, h := range reqHeader.Headers {
 		httpReq.Header[h.Name] = h.Values

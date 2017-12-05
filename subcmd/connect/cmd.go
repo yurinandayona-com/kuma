@@ -9,6 +9,7 @@ import (
 	"github.com/spf13/viper"
 	"github.com/yurinandayona-com/kuma/client"
 	"github.com/yurinandayona-com/kuma/config"
+	"golang.org/x/net/context"
 )
 
 var (
@@ -47,7 +48,8 @@ func init() {
 			}
 
 			log.Print("debug: run 'connect' command")
-			if err := cli.Start(); err != nil {
+			ctx := context.Background()
+			if err := cli.Run(ctx); err != nil {
 				log.Fatalf("alert: %s", err)
 			}
 		},
