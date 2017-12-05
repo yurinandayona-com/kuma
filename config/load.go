@@ -13,7 +13,7 @@ func Load(store *viper.Viper, cfgFile string, cfg interface{}) error {
 	}
 
 	if err := store.Unmarshal(cfg); err != nil {
-		return errors.Wrap(err, "kuma: unmarshal config")
+		return errors.Wrap(err, "failed to unmarshal config")
 	}
 
 	validate := validator.New()
@@ -30,7 +30,7 @@ func loadStore(store *viper.Viper, cfgFile string) error {
 	store.AutomaticEnv()
 
 	if err := store.ReadInConfig(); err != nil {
-		return errors.Wrap(err, "kuma: read config")
+		return errors.Wrap(err, "failed to read config")
 	}
 
 	return nil

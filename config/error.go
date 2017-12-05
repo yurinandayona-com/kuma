@@ -15,7 +15,7 @@ func (err *validateErrorWrapper) Error() string {
 	buf := &bytes.Buffer{}
 
 	if es, ok := err.inner.(validator.ValidationErrors); ok {
-		fmt.Fprintln(buf, "kuma: validation failed")
+		fmt.Fprintln(buf, "validation failed")
 		for _, e := range es {
 			fmt.Fprintln(buf, e)
 		}

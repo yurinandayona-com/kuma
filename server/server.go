@@ -75,7 +75,7 @@ func (svr *Server) Prepare(ctx context.Context, config *api.HubConfig) (*api.Hub
 	}
 
 	if !validSubdomain.MatchString(config.Subdomain) {
-		return nil, errors.New("kuma: invalid subdomain")
+		return nil, errors.New("invalid subdomain")
 	}
 
 	host := config.Subdomain + "." + svr.BaseDomain
@@ -94,11 +94,11 @@ func (svr *Server) Connect(info *api.HubInfo, stream api.Hub_ConnectServer) erro
 	}
 
 	if !strings.HasSuffix(info.Host, "."+svr.BaseDomain) {
-		return errors.New("kuma: invalid subdomain")
+		return errors.New("invalid subdomain")
 	}
 	subdomain := strings.TrimSuffix(info.Host, "."+svr.BaseDomain)
 	if !validSubdomain.MatchString(subdomain) {
-		return errors.New("kuma: invalid subdomain")
+		return errors.New("invalid subdomain")
 	}
 
 	host := subdomain + "." + svr.BaseDomain
@@ -119,7 +119,7 @@ func (svr *Server) newHub(user User, host string, stream api.Hub_ConnectServer) 
 	svr.init()
 
 	if _, ok := svr.hubs[host]; ok {
-		return nil, nil, errors.New("kuma: failed to create a new hub")
+		return nil, nil, errors.New("failed to create a new hub")
 	}
 
 	hub := newHub(host, svr, user, stream)
@@ -139,7 +139,7 @@ func (svr *Server) newHub(user User, host string, stream api.Hub_ConnectServer) 
 func (svr *Server) verifyHubMetadata(ctx context.Context) (User, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
-		return nil, errors.New("kuma: failed to retrieve a metadata")
+		return nil, errors.New("failed to retrieve a metadata")
 	}
 
 	user, err := svr.UserVerifier.Verify(mdGet(md, "token"))
@@ -211,12 +211,12 @@ func (svr *Server) SendError(ctx context.Context, resErr *api.ResponseError) (*g
 func (svr *Server) verifyTunnelMetadata(ctx context.Context) (*hub, int64, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
-		return nil, 0, errors.New("kuma: failed to retrieve a metadata")
+		return nil, 0, errors.New("failed to retrieve a metadata")
 	}
 
 	hub, ok := svr.getHub(mdGet(md, "host"))
 	if !ok {
-		return nil, 0, errors.New("kuma: host not found")
+		return nil, 0, errors.New("host not found")
 	}
 
 	user, err := svr.UserVerifier.Verify(mdGet(md, "token"))
@@ -224,7 +224,7 @@ func (svr *Server) verifyTunnelMetadata(ctx context.Context) (*hub, int64, error
 		return nil, 0, err
 	}
 	if user.GetID() != hub.User.GetID() {
-		return nil, 0, errors.New("kuma: invalid user")
+		return nil, 0, errors.New("invalid user")
 	}
 
 	tunnelID, err := decodeTunnelID(svr.HashID, mdGet(md, "tunnel-id"))
@@ -237,8 +237,8 @@ func (svr *Server) verifyTunnelMetadata(ctx context.Context) (*hub, int64, error
 
 func mdGet(md map[string][]string, key string) string {
 	if vs, ok := md[key]; ok && len(vs) > 0 {
-		return vs[0]
-	} else {
-		return ""
+		return vs[len(vs)-1]
 	}
+
+	return ""
 }

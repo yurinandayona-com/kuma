@@ -47,7 +47,7 @@ func (t *tunnel) UpdateStatus(from, to tunnelStatus) error {
 	defer t.Unlock()
 
 	if t.status != from {
-		return errors.New("kuma: invalid status")
+		return errors.New("invalid status")
 	}
 	t.status = to
 

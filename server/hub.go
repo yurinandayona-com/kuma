@@ -67,6 +67,8 @@ func (hub *hub) openTunnel(w http.ResponseWriter, r *http.Request) (*tunnel, fun
 	}
 
 	tunnelID := hub.nextTunnelID
+	hub.nextTunnelID++
+
 	tunnelIDHash, err := encodeTunnelID(hub.Server.HashID, tunnelID)
 	if err != nil {
 		log.Printf("error: %s", err)
@@ -80,8 +82,6 @@ func (hub *hub) openTunnel(w http.ResponseWriter, r *http.Request) (*tunnel, fun
 		http.Error(w, "kuma: failed to open a new tunnel", 500)
 		return nil, nil, false
 	}
-
-	hub.nextTunnelID += 1
 
 	tunnel := newTunnel(tunnelID, tunnelIDHash, hub, w, r)
 	hub.tunnels[tunnelID] = tunnel
@@ -100,6 +100,10 @@ func (hub *hub) openTunnel(w http.ResponseWriter, r *http.Request) (*tunnel, fun
 func (hub *hub) Close() {
 	hub.Lock()
 	defer hub.Unlock()
+
+	if hub.closed {
+		return
+	}
 
 	for _, tunnel := range hub.tunnels {
 		tunnel.Close()
@@ -252,7 +256,7 @@ func (hub *hub) getTunnel(tunnelID int64) (*tunnel, error) {
 
 	tunnel, ok := hub.tunnels[tunnelID]
 	if !ok {
-		return nil, errors.New("kuma: tunnel not found")
+		return nil, errors.New("tunnel not found")
 	}
 
 	return tunnel, nil
