@@ -24,7 +24,7 @@ dep:
 	dep prune -v
 
 test:
-	go test -v ./...
+	go test -cover -v ./...
 
 #
 # Utilities
