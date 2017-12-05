@@ -1,5 +1,5 @@
-// Package token_inspect implements 'kuma token inspect'.
-package token_inspect
+// Package inspect implements 'kuma token inspect'.
+package inspect
 
 import (
 	"fmt"
@@ -28,7 +28,7 @@ func init() {
 			return nil
 		},
 		Run: func(cmd *cobra.Command, args []string) {
-			jm, err := token_config.LoadJWTManager(cmd)
+			jm, err := config.LoadJWTManager(cmd)
 			if err != nil {
 				log.Fatalf("alert: %s", err)
 			}

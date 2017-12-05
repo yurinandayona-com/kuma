@@ -1,5 +1,5 @@
-// Package token_sign implements 'kuma token sign'.
-package token_sign
+// Package sign implements 'kuma token sign'.
+package sign
 
 import (
 	"fmt"
@@ -33,7 +33,7 @@ func init() {
 			return nil
 		},
 		Run: func(cmd *cobra.Command, args []string) {
-			jm, err := token_config.LoadJWTManager(cmd)
+			jm, err := config.LoadJWTManager(cmd)
 			if err != nil {
 				log.Fatalf("alert: %s", err)
 			}

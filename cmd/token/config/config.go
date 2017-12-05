@@ -1,5 +1,5 @@
-// Package token_config provides configuration loader for commands under 'kuma token'.
-package token_config
+// Package config provides configuration loader for commands under 'kuma token'.
+package config
 
 import (
 	"log"

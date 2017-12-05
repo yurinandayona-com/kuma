@@ -23,8 +23,8 @@ func init() {
 
 	Cmd.PersistentFlags().StringP("user-db", "u", "", "user DB location")
 
-	Cmd.AddCommand(token_inspect.Cmd)
-	Cmd.AddCommand(token_sign.Cmd)
+	Cmd.AddCommand(inspect.Cmd)
+	Cmd.AddCommand(sign.Cmd)
 
-	token_config.Store.BindPFlag("user_db", Cmd.PersistentFlags().Lookup("user-db"))
+	config.Store.BindPFlag("user_db", Cmd.PersistentFlags().Lookup("user-db"))
 }
