@@ -7,7 +7,7 @@ bin/kuma: generate
 
 #
 # Tasks
-.PHONY: generate vet fmt dep
+.PHONY: generate vet fmt dep test
 
 generate:
 	go generate -x ./...
@@ -22,6 +22,9 @@ fmt:
 dep:
 	dep ensure -v
 	dep prune -v
+
+test:
+	go test -v ./...
 
 #
 # Utilities
