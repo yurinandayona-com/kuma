@@ -16,7 +16,7 @@ const (
 	defaultExpirationDays = 100
 )
 
-// 'kuma token sign` command.
+// Cmd is 'kuma token sign` command.
 var Cmd *cobra.Command
 
 func init() {

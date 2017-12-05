@@ -12,7 +12,7 @@ import (
 	"github.com/yurinandayona-com/kuma/cmd/token/config"
 )
 
-// 'kuma token inspect` command.
+// Cmd is 'kuma token inspect` command.
 var Cmd *cobra.Command
 
 func init() {

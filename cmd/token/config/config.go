@@ -12,7 +12,7 @@ import (
 )
 
 var (
-	// 'kuma token' configuration store.
+	// Store is 'kuma token' configuration store.
 	Store = viper.New()
 )
 

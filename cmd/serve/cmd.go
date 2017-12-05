@@ -11,10 +11,10 @@ import (
 )
 
 var (
-	// 'kuma serve' command.
-	Cmd   *cobra.Command
+	// Cmd is 'kuma serve' command.
+	Cmd *cobra.Command
 
-	// 'kuma store' configuration store.
+	// Store is 'kuma store' configuration store.
 	Store = viper.New()
 )
 
