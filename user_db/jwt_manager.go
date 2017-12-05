@@ -16,6 +16,8 @@ type JWTManager struct {
 	HMACKey []byte
 }
 
+var _ server.UserVerifier = &JWTManager{}
+
 // JWTUserClaims is JWT claims containing user information.
 type JWTUserClaims struct {
 	jwt.StandardClaims

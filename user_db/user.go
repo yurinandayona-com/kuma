@@ -1,5 +1,9 @@
 package user_db
 
+import (
+	"github.com/yurinandayona-com/kuma/server"
+)
+
 // User means a user of user DB.
 //
 // It implements server.User.
@@ -8,12 +12,14 @@ type User struct {
 	Name string `toml:"name"`
 }
 
-// It is the same as u.ID.
+var _ server.User = &User{}
+
+// GetID is the same as u.ID.
 func (u *User) GetID() string {
 	return u.ID
 }
 
-// It is the same as u.Name.
+// GetName is the same as u.Name.
 func (u *User) GetName() string {
 	return u.Name
 }

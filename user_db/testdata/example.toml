@@ -1,0 +1,14 @@
+# User DB TOML should contain users array which has two keys, name
+# and id.
+
+# 1st user
+[[users]]
+  name = "MakeNowJust"
+  id   = "00000000-0000-0000-0000-000000000000"
+
+# 2nd user
+[[users]]
+  name = "sh4869"
+  id   = "11111111-1111-1111-1111-111111111111"
+
+# and more...

@@ -26,19 +26,19 @@ type UserDB struct {
 //
 //     # 1st user
 //     [[users]]
-//     name = "MakeNowJust"
-//     id   = "00000000-0000-0000-0000-000000000000"
+//       name = "MakeNowJust"
+//       id   = "00000000-0000-0000-0000-000000000000"
 //
 //     # 2nd user
 //     [[users]]
-//     name = "sh4869"
-//     id   = "00000000-0000-0000-0000-000000000000"
+//       name = "sh4869"
+//       id   = "11111111-1111-1111-1111-111111111111"
 //
 //     # and more...
 func LoadUserDB(filename string) (*UserDB, error) {
 	p, err := ioutil.ReadFile(filename)
 	if err != nil {
-		return nil, errors.Wrapf(err, "kuma: failed to load user DB file")
+		return nil, errors.Wrapf(err, "failed to load user DB file")
 	}
 
 	var internalUserDB struct {
@@ -47,14 +47,14 @@ func LoadUserDB(filename string) (*UserDB, error) {
 
 	err = toml.Unmarshal(p, &internalUserDB)
 	if err != nil {
-		return nil, errors.Wrapf(err, "kuma: failed to load user DB TOML")
+		return nil, errors.Wrapf(err, "failed to load user DB TOML")
 	}
 
 	users := make(map[string]*User, len(internalUserDB.Users))
 
 	for _, u := range internalUserDB.Users {
 		if _, ok := users[u.ID]; ok {
-			return nil, errors.Errorf("kuma: duplicated user ID: %v", u.ID)
+			return nil, errors.Errorf("user ID conflicted: %v", u.ID)
 		}
 
 		users[u.ID] = u
