@@ -3,9 +3,9 @@ package token
 
 import (
 	"github.com/spf13/cobra"
-	"github.com/yurinandayona-com/kuma/cmd/token/config"
-	"github.com/yurinandayona-com/kuma/cmd/token/inspect"
-	"github.com/yurinandayona-com/kuma/cmd/token/sign"
+	"github.com/yurinandayona-com/kuma/subcmd/token/config"
+	"github.com/yurinandayona-com/kuma/subcmd/token/inspect"
+	"github.com/yurinandayona-com/kuma/subcmd/token/sign"
 )
 
 // 'kuma token' command.

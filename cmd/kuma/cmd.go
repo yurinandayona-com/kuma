@@ -6,9 +6,9 @@ import (
 	"github.com/comail/colog"
 	"github.com/spf13/cobra"
 	flag "github.com/spf13/pflag"
-	"github.com/yurinandayona-com/kuma/cmd/connect"
-	"github.com/yurinandayona-com/kuma/cmd/serve"
-	"github.com/yurinandayona-com/kuma/cmd/token"
+	"github.com/yurinandayona-com/kuma/subcmd/connect"
+	"github.com/yurinandayona-com/kuma/subcmd/serve"
+	"github.com/yurinandayona-com/kuma/subcmd/token"
 	"github.com/yurinandayona-com/kuma/version"
 )
 

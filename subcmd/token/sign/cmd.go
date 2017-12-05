@@ -8,7 +8,7 @@ import (
 
 	"github.com/spf13/cobra"
 	flag "github.com/spf13/pflag"
-	"github.com/yurinandayona-com/kuma/cmd/token/config"
+	"github.com/yurinandayona-com/kuma/subcmd/token/config"
 	"github.com/yurinandayona-com/kuma/userdb"
 )
 

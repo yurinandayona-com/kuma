@@ -1,13 +1,13 @@
 .PHONY: all
 
-all: bin/kuma
-
-bin/kuma: generate
-	go build -o bin/kuma .
+all: build
 
 #
 # Tasks
-.PHONY: generate vet fmt dep test
+.PHONY: build generate vet fmt dep test
+
+build: generate
+	go build -o bin/kuma ./cmd/...
 
 generate:
 	go generate -x ./...
