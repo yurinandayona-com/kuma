@@ -6,32 +6,19 @@ import (
 )
 
 func TestLoadUserDB(t *testing.T) {
-	{
-		userDB, err := LoadUserDB("testdata/not_found.toml")
+	for _, c := range []struct {
+		filename string
+		msg      string
+	}{
+		{filename: "not_found.toml", msg: "failed to load user DB file:"},
+		{filename: "invalid.toml", msg: "failed to load user DB TOML:"},
+		{filename: "conflicted.toml", msg: "user ID conflicted:"},
+	} {
+		userDB, err := LoadUserDB("testdata/" + c.filename)
 		if err == nil {
 			t.Fatalf("unexpected ok on LoadUserDB: %#v", userDB)
 		}
-		if msg := err.Error(); !strings.HasPrefix(msg, "failed to load user DB file:") {
-			t.Fatalf("unexpected error message: %#v", msg)
-		}
-	}
-
-	{
-		userDB, err := LoadUserDB("testdata/invalid.toml")
-		if err == nil {
-			t.Fatalf("unexpected ok on LoadUserDB: %#v", userDB)
-		}
-		if msg := err.Error(); !strings.HasPrefix(msg, "failed to load user DB TOML:") {
-			t.Fatalf("unexpected error message: %#v", msg)
-		}
-	}
-
-	{
-		userDB, err := LoadUserDB("testdata/conflicted.toml")
-		if err == nil {
-			t.Fatalf("unexpected ok on LoadUserDB: %#v", userDB)
-		}
-		if msg := err.Error(); !strings.HasPrefix(msg, "user ID conflicted:") {
+		if msg := err.Error(); !strings.HasPrefix(msg, c.msg) {
 			t.Fatalf("unexpected error message: %#v", msg)
 		}
 	}
@@ -58,13 +45,7 @@ func TestUserDB(t *testing.T) {
 		return found
 	}
 	verify := func(user *User) {
-		u, err := userDB.Verify(user.ID, user.Name)
-		if err != nil {
-			t.Fatalf("unexpected error on Verify: %+#v", err)
-		}
-		if *u != *user {
-			t.Fatalf("unexpected verify result: %#v", u)
-		}
+
 	}
 
 	mnj := find("MakeNowJust")
@@ -76,22 +57,36 @@ func TestUserDB(t *testing.T) {
 	verify(mnj)
 	verify(sh)
 
-	{
-		u, err := userDB.Verify("XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX", "404_not_found")
-		if err == nil {
-			t.Fatalf("unexpected ok on Verify: %#v", u)
+	for _, user := range []*User{mnj, sh} {
+		u, err := userDB.Verify(user.ID, user.Name)
+		if err != nil {
+			t.Fatalf("unexpected error on Verify: %+#v", err)
 		}
-		if msg := err.Error(); msg != "user not found" {
-			t.Fatalf("unexpected error message: %#v", msg)
+		if *u != *user {
+			t.Fatalf("unexpected verify result: %#v", u)
 		}
 	}
 
-	{
-		u, err := userDB.Verify(sh.ID, mnj.Name)
+	for _, c := range []struct {
+		id, name string
+		msg      string
+	}{
+		{
+			id:   "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
+			name: "404_not_found",
+			msg:  "user not found",
+		},
+		{
+			id:   sh.ID,
+			name: mnj.Name,
+			msg:  "invalid name",
+		},
+	} {
+		u, err := userDB.Verify(c.id, c.name)
 		if err == nil {
 			t.Fatalf("unexpected ok on Verify: %#v", u)
 		}
-		if msg := err.Error(); msg != "invalid name" {
+		if msg := err.Error(); msg != c.msg {
 			t.Fatalf("unexpected error message: %#v", msg)
 		}
 	}

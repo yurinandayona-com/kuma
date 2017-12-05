@@ -12,6 +12,8 @@ var (
 	id   = "00000000-0000-0000-0000-000000000000"
 
 	token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOi02MjEzNTU5NjgwMCwiaHR0cHM6Ly9naXRodWIuY29tL3l1cmluYW5kYXlvbmEtY29tL2t1bWEvY2xhaW0tdHlwZXMvdXNlci1pZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImh0dHBzOi8vZ2l0aHViLmNvbS95dXJpbmFuZGF5b25hLWNvbS9rdW1hL2NsYWltLXR5cGVzL3VzZXItbmFtZSI6Ik1ha2VOb3dKdXN0In0.HsoHdMZHsJ-6NL8IVp6iTPZINoow_3yT71Ruz5yIKss"
+
+	rs256Token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.e30.b-gLBOyB62jzeiETcpDg4wgLa9EcJcEN5Dh4Hna5Uvs6wqGWRco1uIxdsQJRTvsWPq63A_ZM9g7rjs-SEORyty1DqWNeqaK3uaECr5n80dL_oKcWUhzCDJbC2W_v4_2jQz4lz5m12FH-_N19RRymA_GeKuZMyvH0MUlitVfnjlA"
 )
 
 func TestJWTManagerSign(t *testing.T) {
@@ -76,6 +78,28 @@ func TestJWTManagerVerify(t *testing.T) {
 
 		if i := u.GetID(); i != id {
 			t.Errorf("unexpected id: %#v", i)
+		}
+	}
+
+	for _, c := range []struct {
+		token string
+		msg   string
+	}{
+		{
+			token: rs256Token,
+			msg:   "invalid JWT token: invalid JWT algorithm",
+		},
+		{
+			token: "",
+			msg:   "invalid JWT",
+		},
+	} {
+		user, err := jm.Verify(c.token)
+		if err == nil {
+			t.Fatalf("unexpected ok on Verify: %#v", user)
+		}
+		if msg := err.Error(); msg != c.msg {
+			t.Errorf("unexpected error message: %#v", msg)
 		}
 	}
 }

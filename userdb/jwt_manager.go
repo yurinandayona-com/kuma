@@ -35,9 +35,9 @@ func (jm *JWTManager) Verify(t string) (server.User, error) {
 
 	if valid {
 		return jm.UserDB.Verify(claims.ID, claims.Name)
-	} else {
-		return nil, errors.New("kuma: invalid JWT")
 	}
+
+	return nil, errors.New("invalid JWT")
 }
 
 // Parse parses t as JWT and then returns JWTUserClaims bound this JWT and
@@ -52,11 +52,11 @@ func (jm *JWTManager) Parse(t string) (*JWTUserClaims, bool, error) {
 
 	if token != nil {
 		if claims, ok := token.Claims.(*JWTUserClaims); ok {
-			return claims, token.Valid, errors.Wrap(err, "kuma: invalid JWT token")
+			return claims, token.Valid, errors.Wrap(err, "invalid JWT token")
 		}
 	}
 
-	return nil, false, errors.New("kuma: invalid JWT")
+	return nil, false, errors.New("invalid JWT")
 }
 
 // Sign returns signed JWT with given user information and expiration.
