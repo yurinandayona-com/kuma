@@ -62,7 +62,7 @@ func (hub *hub) openTunnel(w http.ResponseWriter, r *http.Request) (*tunnel, fun
 	defer hub.Unlock()
 
 	if hub.closed {
-		http.Error(w, "kuma: hub is closed", 500)
+		http.Error(w, "kuma: hub is closed", http.StatusInternalServerError)
 		return nil, nil, false
 	}
 
@@ -72,14 +72,14 @@ func (hub *hub) openTunnel(w http.ResponseWriter, r *http.Request) (*tunnel, fun
 	tunnelIDHash, err := encodeTunnelID(hub.Server.HashID, tunnelID)
 	if err != nil {
 		log.Printf("error: %s", err)
-		http.Error(w, "kuma: invalid tunnelID", 400)
+		http.Error(w, "kuma: invalid tunnelID", http.StatusBadRequest)
 		return nil, nil, false
 	}
 
 	err = hub.Stream.Send(&api.Request{Host: hub.Host, TunnelID: tunnelIDHash})
 	if err != nil {
 		log.Printf("error: %s", err)
-		http.Error(w, "kuma: failed to open a new tunnel", 500)
+		http.Error(w, "kuma: failed to open a new tunnel", http.StatusInternalServerError)
 		return nil, nil, false
 	}
 
@@ -245,7 +245,7 @@ func (hub *hub) SendError(tunnelID int64, resErr *api.ResponseError) error {
 	log.Printf("debug: Tunnel.SendError: %s [%s]: %s", hub.Host, tunnel.IDHash, resErr.Error)
 
 	tunnel.Close()
-	http.Error(tunnel.Response, "kuma: internal server error", 500)
+	http.Error(tunnel.Response, "kuma: internal server error", http.StatusInternalServerError)
 
 	return nil
 }

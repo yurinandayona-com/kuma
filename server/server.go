@@ -60,7 +60,7 @@ func (svr *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if hub, ok := svr.getHub(host); ok {
 		hub.ServeHTTP(w, r)
 	} else {
-		http.Error(w, "kuma: host not found", 404)
+		http.Error(w, "kuma: host not found", http.StatusNotFound)
 	}
 }
 
