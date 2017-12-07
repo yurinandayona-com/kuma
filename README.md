@@ -1,6 +1,4 @@
-# kuma: HTTP tunnel over gRPC
-
-> YURI meets KUMA.
+# :bear: kuma: HTTP tunnel over gRPC
 
 [![GoDoc](https://godoc.org/github.com/yurinandayona-com/kuma?status.svg)](https://godoc.org/github.com/yurinandayona-com/kuma)
 
