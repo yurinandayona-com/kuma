@@ -41,7 +41,11 @@ func (hub *hub) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// add headers for forward proxy
 	r.Header.Add("X-Forwarded-For", r.RemoteAddr)
 	r.Header.Add("X-Forwarded-Host", r.Host)
-	r.Header.Add("X-Forwarded-Proto", "http")
+	if r.TLS == nil {
+		r.Header.Add("X-Forwarded-Proto", "http")
+	} else {
+		r.Header.Add("X-Forwarded-Proto", "https")
+	}
 	r.Header.Add("Via", fmt.Sprintf("%s %s", r.Proto, version.Full))
 
 	tunnel, closeTunnel, ok := hub.openTunnel(w, r)
