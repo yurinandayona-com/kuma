@@ -4,10 +4,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/phayes/freeport"
-	"net/http"
 	"log"
+	"net/http"
 	_ "net/http/pprof"
+
+	"github.com/phayes/freeport"
 )
 
 func init() {
