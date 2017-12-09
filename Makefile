@@ -9,6 +9,9 @@ all: build
 build: generate
 	go build -o bin/kuma ./cmd/kuma
 
+prof: generate
+	go build -o bin/kuma-prof -tags prof ./cmd/kuma
+
 generate:
 	go generate -x ./...
 
