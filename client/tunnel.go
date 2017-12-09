@@ -23,7 +23,7 @@ var (
 )
 
 type tunnel struct {
-	Client  *Client
+	Client    *Client
 	SessionID string
 
 	tunnel api.TunnelClient

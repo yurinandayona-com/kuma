@@ -15,7 +15,7 @@ import (
 type hub struct {
 	sync.RWMutex
 
-	ID int64
+	ID     int64
 	Host   string
 	Server *Server
 	Stream api.Hub_ConnectServer
@@ -28,7 +28,7 @@ type hub struct {
 
 func newHub(id int64, host string, server *Server, stream api.Hub_ConnectServer) *hub {
 	return &hub{
-		ID: id,
+		ID:     id,
 		Host:   host,
 		Server: server,
 		Stream: stream,

@@ -2,8 +2,8 @@
 package server
 
 import (
-	"encoding/binary"
 	"crypto/rand"
+	"encoding/binary"
 	"log"
 	"net/http"
 	"regexp"
@@ -25,7 +25,7 @@ var (
 // Config is configuration to create server.
 type Config struct {
 	BaseDomain string
-	HashID *hashids.HashID
+	HashID     *hashids.HashID
 }
 
 // Server implements kuma server.
@@ -41,10 +41,10 @@ type Server struct {
 	sync.RWMutex
 	*Config
 
-	uniq int64
+	uniq      int64
 	nextHubID int64
-	hubHosts map[string]int64
-	hubs map[int64]*hub
+	hubHosts  map[string]int64
+	hubs      map[int64]*hub
 }
 
 func New(cfg *Config) (*Server, error) {
@@ -62,9 +62,9 @@ func New(cfg *Config) (*Server, error) {
 	svr := &Server{
 		Config: cfg,
 
-		uniq: uniq,
+		uniq:     uniq,
 		hubHosts: make(map[string]int64),
-		hubs: make(map[int64]*hub),
+		hubs:     make(map[int64]*hub),
 	}
 
 	return svr, nil

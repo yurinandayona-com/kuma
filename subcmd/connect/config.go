@@ -10,10 +10,10 @@ type Config struct {
 	GRPCServer string `mapstructure:"grpc_server"`
 
 	// UseTLS is flag to use TLS to connect gRPC server.
-	UseTLS     bool   `mapstructure:"use_tls"`
+	UseTLS bool `mapstructure:"use_tls"`
 
 	// Port is localhost port number to proxy.
-	Port      int    `mapstructure:"port" validate:"required"`
+	Port int `mapstructure:"port" validate:"required"`
 
 	// Subdomain is subdomain name to require.
 	Subdomain string `mapstructure:"subdomain" validate:"required,alphanum,max=17"`

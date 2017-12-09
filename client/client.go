@@ -99,7 +99,7 @@ func (cli *Client) dialConn(ctx context.Context) (*grpc.ClientConn, error) {
 
 func (cli *Client) handleRequest(ctx context.Context, req *api.Request) {
 	t := &tunnel{
-		Client:  cli,
+		Client:    cli,
 		SessionID: req.SessionID,
 	}
 
