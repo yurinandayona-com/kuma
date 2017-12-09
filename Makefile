@@ -7,7 +7,7 @@ all: build
 .PHONY: build generate vet fmt dep test
 
 build: generate
-	go build -o bin/kuma ./cmd/...
+	go build -o bin/kuma ./cmd/kuma
 
 generate:
 	go generate -x ./...
