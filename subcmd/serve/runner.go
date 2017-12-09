@@ -1,6 +1,10 @@
 package serve
 
 import (
+	"crypto/tls"
+	"crypto/x509"
+	"errors"
+	"io/ioutil"
 	"log"
 	"net"
 	"net/http"
@@ -75,11 +79,32 @@ func (r *runner) runGRPCServer(errCh chan<- error) {
 
 	serverOpt := make([]grpc.ServerOption, 0)
 	if r.Config.GRPC.UseTLS {
-		creds, err := credentials.NewServerTLSFromFile(r.Config.GRPC.TLSCert, r.Config.GRPC.TLSKey)
+		cert, err := tls.LoadX509KeyPair(r.Config.GRPC.TLSCert, r.Config.GRPC.TLSKey)
 		if err != nil {
 			errCh <- err
 			return
 		}
+		cfg := &tls.Config{
+			Certificates: []tls.Certificate{cert},
+		}
+
+		if r.Config.GRPC.RootCA != "" {
+			cfg.ClientAuth = tls.RequireAndVerifyClientCert
+			rootCAs := x509.NewCertPool()
+			pem, err := ioutil.ReadFile(r.Config.GRPC.RootCA)
+			if err != nil {
+				errCh <- err
+				return
+			}
+			if !rootCAs.AppendCertsFromPEM(pem) {
+				errCh <- errors.New("failed to append certificates")
+				return
+			}
+			cfg.ClientCAs = rootCAs
+		}
+		cfg.BuildNameToCertificate()
+
+		creds := credentials.NewTLS(cfg)
 		serverOpt = append(serverOpt, grpc.Creds(creds))
 	}
 

@@ -40,7 +40,11 @@ func init() {
 
 			cli := &client.Client{
 				GRPCServer: cfg.GRPCServer,
-				UseTLS:     cfg.UseTLS,
+
+				UseTLS:  cfg.UseTLS,
+				RootCA:  cfg.RootCA,
+				TLSCert: cfg.TLSCert,
+				TLSKey:  cfg.TLSKey,
 
 				Port:      cfg.Port,
 				Subdomain: cfg.Subdomain,
