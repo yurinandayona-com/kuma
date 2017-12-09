@@ -16,6 +16,5 @@ message HubInfo {
 }
 
 message Request {
-  string host = 1;
-  string tunnelID = 2;
+  string sessionID = 1;
 }

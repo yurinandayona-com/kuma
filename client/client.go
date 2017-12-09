@@ -10,7 +10,6 @@ import (
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
-	"google.golang.org/grpc/metadata"
 )
 
 // client is internal type of Client.
@@ -24,7 +23,6 @@ type client struct {
 type Client struct {
 	GRPCServer string
 	UseTLS     bool
-	Token      string
 
 	Port      int
 	Subdomain string
@@ -44,13 +42,9 @@ func (cli *Client) Run(ctx context.Context) error {
 	defer cli.Conn.Close()
 
 	hub := api.NewHubClient(cli.Conn)
-	md := metadata.Pairs(
-		"token", cli.Token,
-	)
-	hubCtx := metadata.NewOutgoingContext(ctx, md)
 
 	log.Print("debug: prepare hub information")
-	info, err := hub.Prepare(hubCtx, &api.HubConfig{
+	info, err := hub.Prepare(ctx, &api.HubConfig{
 		Subdomain: cli.Subdomain,
 	})
 	if err != nil {
@@ -60,7 +54,7 @@ func (cli *Client) Run(ctx context.Context) error {
 	log.Printf("debug: hub information: host = %#v", info.Host)
 
 	log.Print("debug: connect to hub")
-	reqStream, err := hub.Connect(hubCtx, info)
+	reqStream, err := hub.Connect(ctx, info)
 	if err != nil {
 		return errors.Wrap(err, "kuma: failed to connect to hub")
 	}
@@ -106,7 +100,7 @@ func (cli *Client) dialConn(ctx context.Context) (*grpc.ClientConn, error) {
 func (cli *Client) handleRequest(ctx context.Context, req *api.Request) {
 	t := &tunnel{
 		Client:  cli,
-		Request: req,
+		SessionID: req.SessionID,
 	}
 
 	if err := t.Run(ctx); err != nil {

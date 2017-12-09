@@ -8,13 +8,12 @@ import (
 	"github.com/speps/go-hashids"
 	"github.com/yurinandayona-com/kuma/api"
 	"github.com/yurinandayona-com/kuma/server"
-	"github.com/yurinandayona-com/kuma/userdb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 )
 
 const (
-	hashIDsMinLength = 17
+	hashIDMinLength = 17
 )
 
 type runner struct {
@@ -27,25 +26,19 @@ type runner struct {
 }
 
 func (r *runner) Run() error {
-	log.Printf("debug: load user DB: %s", r.Config.UserDB)
-	userDB, err := userdb.LoadUserDB(r.Config.UserDB)
+	hd := hashids.NewData()
+	hd.Salt = r.Config.HashIDSecret
+	hd.MinLength = hashIDMinLength
+	hashID := hashids.NewWithData(hd)
+
+	svr, err := server.New(&server.Config{
+		BaseDomain: r.Config.BaseDomain,
+		HashID:     hashID,
+	})
 	if err != nil {
 		return err
 	}
-
-	hd := hashids.NewData()
-	hd.Salt = r.Config.HashIDsSalt
-	hd.MinLength = hashIDsMinLength
-	hashID := hashids.NewWithData(hd)
-
-	r.server = &server.Server{
-		BaseDomain: r.Config.BaseDomain,
-		HashID:     hashID,
-		UserVerifier: &userdb.JWTManager{
-			UserDB:  userDB,
-			HMACKey: []byte(r.Config.HMACKey),
-		},
-	}
+	r.server = svr
 
 	errCh := make(chan error, 2)
 

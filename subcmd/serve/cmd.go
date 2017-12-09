@@ -55,7 +55,6 @@ func init() {
 	//
 	// Viper settings
 
-	Store.SetDefault("user_db", ".kuma/user_db.toml")
 	Store.SetDefault("http.listen", ":10080")
 	Store.SetDefault("grpc.listen", ":8342")
 	Store.SetDefault("grpc.use_tls", false)
@@ -71,7 +70,6 @@ func init() {
 // AddFlags sets up Config related flags.
 func AddFlags(flags *flag.FlagSet) {
 	// Flags for general settings
-	flags.StringP("user-db", "u", "", "user DB location")
 	flags.StringP("base-domain", "b", "", "base domain of server")
 
 	// Flags for HTTP server
@@ -87,7 +85,6 @@ func AddFlags(flags *flag.FlagSet) {
 // BindToStore binds flags to Store. It should be called before config.Load
 // against *Config.
 func BindToStore(flags *flag.FlagSet) {
-	Store.BindPFlag("user_db", flags.Lookup("user-db"))
 	Store.BindPFlag("base_domain", flags.Lookup("base-domain"))
 
 	Store.BindPFlag("http.listen", flags.Lookup("http-listen"))

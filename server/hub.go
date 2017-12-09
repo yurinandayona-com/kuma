@@ -15,9 +15,9 @@ import (
 type hub struct {
 	sync.RWMutex
 
+	ID int64
 	Host   string
 	Server *Server
-	User   User
 	Stream api.Hub_ConnectServer
 
 	closed bool
@@ -26,11 +26,11 @@ type hub struct {
 	tunnels      map[int64]*tunnel
 }
 
-func newHub(host string, server *Server, user User, stream api.Hub_ConnectServer) *hub {
+func newHub(id int64, host string, server *Server, stream api.Hub_ConnectServer) *hub {
 	return &hub{
+		ID: id,
 		Host:   host,
 		Server: server,
-		User:   user,
 		Stream: stream,
 
 		tunnels: make(map[int64]*tunnel, 0),
@@ -73,21 +73,21 @@ func (hub *hub) openTunnel(w http.ResponseWriter, r *http.Request) (*tunnel, fun
 	tunnelID := hub.nextTunnelID
 	hub.nextTunnelID++
 
-	tunnelIDHash, err := encodeTunnelID(hub.Server.HashID, tunnelID)
+	sessionIDHash, err := hub.Server.encodeSessionID(hub.ID, tunnelID)
 	if err != nil {
 		log.Printf("error: %s", err)
-		http.Error(w, "kuma: invalid tunnelID", http.StatusBadRequest)
+		http.Error(w, "kuma: internal server error", http.StatusInternalServerError)
 		return nil, nil, false
 	}
 
-	err = hub.Stream.Send(&api.Request{Host: hub.Host, TunnelID: tunnelIDHash})
+	err = hub.Stream.Send(&api.Request{SessionID: sessionIDHash})
 	if err != nil {
 		log.Printf("error: %s", err)
-		http.Error(w, "kuma: failed to open a new tunnel", http.StatusInternalServerError)
+		http.Error(w, "kuma: internal server error", http.StatusInternalServerError)
 		return nil, nil, false
 	}
 
-	tunnel := newTunnel(tunnelID, tunnelIDHash, hub, w, r)
+	tunnel := newTunnel(tunnelID, sessionIDHash, hub, w, r)
 	hub.tunnels[tunnelID] = tunnel
 
 	closeTunnel := func() {

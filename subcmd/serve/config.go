@@ -6,14 +6,8 @@ import (
 
 // Config represents configuration file contents for 'kuma serve'.
 type Config struct {
-	// User DB location.
-	UserDB string `mapstructure:"user_db"`
-
-	// Salt string for HashIDs.
-	HashIDsSalt string `mapstructure:"hash_ids_salt" validate:"required"`
-
-	// Private key for HMAC.
-	HMACKey string `mapstructure:"hmac_key" validate:"required"`
+	// HashIDSecret is salt string for HashIDs.
+	HashIDSecret string `mapstructure:"hash_id_secret" validate:"required"`
 
 	// Base domain.
 	BaseDomain string `mapstructure:"base_domain" validate:"required"`
@@ -40,11 +34,9 @@ type Config struct {
 
 // DebugLog inspects configuration contents as debug logs.
 //
-// It does not show HashIDsSalt and HMACKey for security reason.
+// It does not show HashIDSecret for security reason.
 func (cfg *Config) DebugLog() {
-	log.Printf("debug: user_db = %#v", cfg.UserDB)
-	log.Print("debug: hash_ids_salt = *** (hide)")
-	log.Print("debug: hmac_key = *** (hide)")
+	log.Print("debug: hash_id_secret = *** (hide)")
 	log.Printf("debug: base_domain = %#v", cfg.BaseDomain)
 
 	log.Printf("debug: http.listen = %#v", cfg.HTTP.Listen)
