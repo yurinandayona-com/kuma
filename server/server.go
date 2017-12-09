@@ -41,22 +41,15 @@ type Server struct {
 	sync.RWMutex
 	*Config
 
-	uniq      int64
-	nextHubID int64
-	hubHosts  map[string]int64
-	hubs      map[int64]*hub
+	uniq     int64
+	hubHosts map[string]int64
+	hubs     map[int64]*hub
 }
 
 func New(cfg *Config) (*Server, error) {
-	var uniq int64
-	err := binary.Read(rand.Reader, binary.BigEndian, &uniq)
+	uniq, err := randInt64()
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to read server unique")
-	}
-
-	// serve unique should be positive.
-	if uniq < 0 {
-		uniq = -uniq
+		return nil, errors.Wrap(err, "failed to get server unique")
 	}
 
 	svr := &Server{
@@ -149,8 +142,21 @@ func (svr *Server) newHub(host string, stream api.Hub_ConnectServer) (func(), er
 		return nil, errors.New("hub is already connected")
 	}
 
-	hubID := svr.nextHubID
-	svr.nextHubID++
+	// find a new hub ID.
+	var hubID int64
+	for {
+		var err error
+
+		hubID, err = randInt64()
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to get hub ID")
+		}
+
+		// if hubID is duplicated (rare case), it continues loop.
+		if _, ok := svr.hubs[hubID]; !ok {
+			break
+		}
+	}
 
 	hub := newHub(hubID, host, svr, stream)
 	svr.hubs[hubID] = hub
@@ -251,4 +257,20 @@ func getMD(md map[string][]string, key string) string {
 	}
 
 	return ""
+}
+
+// randInt64 gets random positive number.
+func randInt64() (int64, error) {
+	var r int64
+	err := binary.Read(rand.Reader, binary.BigEndian, &r)
+	if err != nil {
+		return 0, err
+	}
+
+	// r should be positive.
+	if r < 0 {
+		r = -r
+	}
+
+	return r, nil
 }
