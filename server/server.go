@@ -260,6 +260,5 @@ func getPeerID(ctx context.Context) string {
 		return ""
 	}
 
-	log.Printf("info: peer ID: %s", ti.State.PeerCertificates[0].Subject.CommonName)
 	return ti.State.PeerCertificates[0].Subject.CommonName
 }
