@@ -10,7 +10,7 @@ const (
 
 // encodeSessionID encodes hubID and tunnelID by using hashID.
 func (svr *Server) encodeSessionID(hubID, tunnelID int64) (string, error) {
-	encoded, err := svr.HashID.EncodeInt64([]int64{sessionIDSign, svr.uniq, hubID, tunnelID})
+	encoded, err := svr.HashID.EncodeInt64([]int64{sessionIDSign, hubID, tunnelID})
 	if err != nil {
 		return "", errors.Wrap(err, "failed to encode session ID")
 	}
@@ -22,11 +22,11 @@ func (svr *Server) encodeSessionID(hubID, tunnelID int64) (string, error) {
 func (svr *Server) decodeSessionID(sessionIDHash string) (hubID int64, tunnelID int64, err error) {
 	decoded := svr.HashID.DecodeInt64(sessionIDHash)
 
-	if len(decoded) == 0 || len(decoded) != 4 || decoded[0] != sessionIDSign || decoded[1] != svr.uniq {
+	if len(decoded) == 0 || len(decoded) != 3 || decoded[0] != sessionIDSign {
 		err = errors.New("invalid session ID")
 	} else {
-		hubID = decoded[2]
-		tunnelID = decoded[3]
+		hubID = decoded[1]
+		tunnelID = decoded[2]
 	}
 
 	return
