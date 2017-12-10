@@ -13,7 +13,9 @@ import (
 	"github.com/speps/go-hashids"
 	"github.com/yurinandayona-com/kuma/api"
 	"golang.org/x/net/context"
+	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/peer"
 )
 
 var (
@@ -137,7 +139,7 @@ func (svr *Server) newHub(host string, stream api.Hub_ConnectServer) (func(), er
 	hubID := svr.nextHubID
 	svr.nextHubID++
 
-	hub := newHub(hubID, host, svr, stream)
+	hub := newHub(hubID, getPeerID(stream.Context()), host, svr, stream)
 	svr.hubs[hubID] = hub
 	svr.hubHosts[host] = hubID
 
@@ -227,6 +229,11 @@ func (svr *Server) verifySessionMetadata(ctx context.Context) (*hub, int64, erro
 		return nil, 0, errors.New("invalid session id")
 	}
 
+	peerID := getPeerID(ctx)
+	if hub.PeerID != peerID {
+		return nil, 0, errors.New("invalid client certificate")
+	}
+
 	return hub, tunnelID, nil
 }
 
@@ -236,4 +243,23 @@ func getMD(md map[string][]string, key string) string {
 	}
 
 	return ""
+}
+
+func getPeerID(ctx context.Context) string {
+	p, ok := peer.FromContext(ctx)
+	if !ok {
+		return ""
+	}
+
+	ti, ok := p.AuthInfo.(credentials.TLSInfo)
+	if !ok {
+		return ""
+	}
+
+	if len(ti.State.PeerCertificates) < 1 {
+		return ""
+	}
+
+	log.Printf("info: peer ID: %s", ti.State.PeerCertificates[0].Subject.CommonName)
+	return ti.State.PeerCertificates[0].Subject.CommonName
 }

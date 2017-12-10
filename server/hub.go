@@ -16,6 +16,7 @@ type hub struct {
 	sync.RWMutex
 
 	ID     int64
+	PeerID string
 	Host   string
 	Server *Server
 	Stream api.Hub_ConnectServer
@@ -26,9 +27,10 @@ type hub struct {
 	tunnels      map[int64]*tunnel
 }
 
-func newHub(id int64, host string, server *Server, stream api.Hub_ConnectServer) *hub {
+func newHub(id int64, peerID, host string, server *Server, stream api.Hub_ConnectServer) *hub {
 	return &hub{
 		ID:     id,
+		PeerID: peerID,
 		Host:   host,
 		Server: server,
 		Stream: stream,
