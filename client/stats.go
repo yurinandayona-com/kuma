@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/dustin/go-humanize"
+	"github.com/fatih/color"
 )
 
 type stats struct {
@@ -36,11 +37,47 @@ func (ss *stats) Log(d time.Duration) {
 	}
 
 	line := &bytes.Buffer{}
-	fmt.Fprintf(line, "info: [%s] %s %s", ss.TunnelID, ss.Method, ss.Path)
+
+	fmt.Fprintf(line, "info: [%s]", ss.TunnelID)
+	fmt.Fprintf(line, " %s (%6s) %10s", color.New(statusColor(ss.Status)).Sprintf(" %d ", ss.Status), humanize.Bytes(uint64(ss.ResponseBodySize)), d)
+	fmt.Fprintf(line, " | %s %s", color.New(methodColor(ss.Method)).Sprintf("%s", ss.Method), ss.Path)
 	if ss.RequestBodySize > 0 {
 		fmt.Fprintf(line, " (%s)", humanize.Bytes(uint64(ss.RequestBodySize)))
 	}
-	fmt.Fprintf(line, " ==> %d (%s) in %s", ss.Status, humanize.Bytes(uint64(ss.ResponseBodySize)), d)
 
 	log.Print(line)
+}
+
+func statusColor(code int) color.Attribute {
+	switch {
+	case 200 <= code && code < 300:
+		return color.BgHiGreen
+	case 300 <= code && code < 400:
+		return color.BgHiWhite
+	case 400 <= code && code < 500:
+		return color.BgHiRed
+	default:
+		return color.BgHiYellow
+	}
+}
+
+func methodColor(method string) color.Attribute {
+	switch method {
+	case "GET":
+		return color.FgBlue
+	case "POST":
+		return color.FgCyan
+	case "PUT":
+		return color.FgYellow
+	case "DELETE":
+		return color.FgRed
+	case "PATCH":
+		return color.FgGreen
+	case "HEAD":
+		return color.FgMagenta
+	case "OPTIONS":
+		return color.FgWhite
+	default:
+		return color.Reset
+	}
 }
