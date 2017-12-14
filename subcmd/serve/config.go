@@ -27,9 +27,9 @@ type Config struct {
 		UseTLS bool `mapstructure:"use_tls"`
 
 		// Certification file and private key file.
-		TLSCert string `mapstructure:"tls_cert"`
-		TLSKey  string `mapstructure:"tls_key"`
-		RootCA  string `mapstructure:"root_ca"`
+		TLSCert  string `mapstructure:"tls_cert"`
+		TLSKey   string `mapstructure:"tls_key"`
+		ClientCA string `mapstructure:"client_ca"`
 	} `mapstructure:"grpc"`
 }
 
@@ -46,5 +46,5 @@ func (cfg *Config) DebugLog() {
 	log.Printf("debug: grpc.use_tls = %#v", cfg.GRPC.UseTLS)
 	log.Printf("debug: grpc.tls_cert = %#v", cfg.GRPC.TLSCert)
 	log.Printf("debug: grpc.tls_key = %#v", cfg.GRPC.TLSKey)
-	log.Printf("debug: grpc.root_ca = %#v", cfg.GRPC.RootCA)
+	log.Printf("debug: grpc.client_ca = %#v", cfg.GRPC.ClientCA)
 }

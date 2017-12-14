@@ -88,19 +88,19 @@ func (r *runner) runGRPCServer(errCh chan<- error) {
 			Certificates: []tls.Certificate{cert},
 		}
 
-		if r.Config.GRPC.RootCA != "" {
+		if r.Config.GRPC.ClientCA != "" {
 			cfg.ClientAuth = tls.RequireAndVerifyClientCert
-			rootCAs := x509.NewCertPool()
-			pem, err := ioutil.ReadFile(r.Config.GRPC.RootCA)
+			clientCAs := x509.NewCertPool()
+			pem, err := ioutil.ReadFile(r.Config.GRPC.ClientCA)
 			if err != nil {
 				errCh <- err
 				return
 			}
-			if !rootCAs.AppendCertsFromPEM(pem) {
+			if !clientCAs.AppendCertsFromPEM(pem) {
 				errCh <- errors.New("failed to append certificates")
 				return
 			}
-			cfg.ClientCAs = rootCAs
+			cfg.ClientCAs = clientCAs
 		}
 		cfg.BuildNameToCertificate()
 
