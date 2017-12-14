@@ -65,6 +65,7 @@ func init() {
 	Store.BindEnv("grpc.use_tls", "KUMA_SERVE_GRPC_USE_TLS")
 	Store.BindEnv("grpc.tls_cert", "KUMA_SERVE_GRPC_TLS_CERT")
 	Store.BindEnv("grpc.tls_key", "KUMA_SERVE_GRPC_TLS_KEY")
+	Store.BindEnv("grpc.client_ca", "KUMA_SERVE_GRPC_CLIENT_CA")
 }
 
 // AddFlags sets up Config related flags.
