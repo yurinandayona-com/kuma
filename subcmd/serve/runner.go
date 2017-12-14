@@ -88,10 +88,10 @@ func (r *runner) runGRPCServer(errCh chan<- error) {
 			Certificates: []tls.Certificate{cert},
 		}
 
-		if r.Config.GRPC.ClientCA != "" {
+		if r.Config.GRPC.TLSClientCA != "" {
 			cfg.ClientAuth = tls.RequireAndVerifyClientCert
 			clientCAs := x509.NewCertPool()
-			pem, err := ioutil.ReadFile(r.Config.GRPC.ClientCA)
+			pem, err := ioutil.ReadFile(r.Config.GRPC.TLSClientCA)
 			if err != nil {
 				errCh <- err
 				return

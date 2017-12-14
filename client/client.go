@@ -26,10 +26,10 @@ type client struct {
 type Client struct {
 	GRPCServer string
 
-	UseTLS  bool
-	RootCA  string
-	TLSCert string
-	TLSKey  string
+	UseTLS    bool
+	TLSRootCA string
+	TLSCert   string
+	TLSKey    string
 
 	Port      int
 	Subdomain string
@@ -90,9 +90,9 @@ func (cli *Client) dialConn(ctx context.Context) (*grpc.ClientConn, error) {
 	if cli.UseTLS {
 		cfg := &tls.Config{}
 
-		if cli.RootCA != "" {
+		if cli.TLSRootCA != "" {
 			rootCAs := x509.NewCertPool()
-			pem, err := ioutil.ReadFile(cli.RootCA)
+			pem, err := ioutil.ReadFile(cli.TLSRootCA)
 			if err != nil {
 				return nil, errors.Wrap(err, "failed to read root CA file")
 			}

@@ -65,7 +65,7 @@ func init() {
 	Store.BindEnv("grpc.use_tls", "KUMA_SERVE_GRPC_USE_TLS")
 	Store.BindEnv("grpc.tls_cert", "KUMA_SERVE_GRPC_TLS_CERT")
 	Store.BindEnv("grpc.tls_key", "KUMA_SERVE_GRPC_TLS_KEY")
-	Store.BindEnv("grpc.client_ca", "KUMA_SERVE_GRPC_CLIENT_CA")
+	Store.BindEnv("grpc.tls_client_ca", "KUMA_SERVE_GRPC_TLS_CLIENT_CA")
 }
 
 // AddFlags sets up Config related flags.
@@ -81,7 +81,7 @@ func AddFlags(flags *flag.FlagSet) {
 	flags.Bool("grpc-use-tls", false, "flag to use TLS for gRPC server")
 	flags.String("grpc-tls-cert", "", "TLS certification file location")
 	flags.String("grpc-tls-key", "", "TLS key file location")
-	flags.String("grpc-client-ca", "", "TLS client CA file location")
+	flags.String("grpc-tls-client-ca", "", "TLS client CA file location")
 }
 
 // BindToStore binds flags to Store. It should be called before config.Load
@@ -95,5 +95,5 @@ func BindToStore(flags *flag.FlagSet) {
 	Store.BindPFlag("grpc.use_tls", flags.Lookup("grpc-use-tls"))
 	Store.BindPFlag("grpc.tls_cert", flags.Lookup("grpc-tls-cert"))
 	Store.BindPFlag("grpc.tls_key", flags.Lookup("grpc-tls-key"))
-	Store.BindPFlag("grpc.client_ca", flags.Lookup("grpc-client-ca"))
+	Store.BindPFlag("grpc.tls_client_ca", flags.Lookup("grpc-tls-client-ca"))
 }

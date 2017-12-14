@@ -30,8 +30,8 @@ type Config struct {
 		TLSCert string `mapstructure:"tls_cert"`
 		TLSKey  string `mapstructure:"tls_key"`
 
-		// CA location for client certificate authentication.
-		ClientCA string `mapstructure:"client_ca"`
+		// TLS CA location for client certificate authentication.
+		TLSClientCA string `mapstructure:"tls_client_ca"`
 	} `mapstructure:"grpc"`
 }
 
@@ -48,5 +48,5 @@ func (cfg *Config) DebugLog() {
 	log.Printf("debug: grpc.use_tls = %#v", cfg.GRPC.UseTLS)
 	log.Printf("debug: grpc.tls_cert = %#v", cfg.GRPC.TLSCert)
 	log.Printf("debug: grpc.tls_key = %#v", cfg.GRPC.TLSKey)
-	log.Printf("debug: grpc.client_ca = %#v", cfg.GRPC.ClientCA)
+	log.Printf("debug: grpc.client_ca = %#v", cfg.GRPC.TLSClientCA)
 }
