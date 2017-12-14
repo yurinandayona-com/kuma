@@ -2,22 +2,10 @@
 
 
 [[projects]]
-  name = "github.com/BurntSushi/toml"
-  packages = ["."]
-  revision = "b26d9c308763d68093482582cea63d69be07a0f0"
-  version = "v0.3.0"
-
-[[projects]]
   branch = "master"
   name = "github.com/comail/colog"
   packages = ["."]
   revision = "fba8e7b1f46c3607f09760ce3880066e7ff57c5a"
-
-[[projects]]
-  name = "github.com/dgrijalva/jwt-go"
-  packages = ["."]
-  revision = "dbeaa9332f19a944acb5736b4456cfcc02140e29"
-  version = "v3.1.0"
 
 [[projects]]
   branch = "master"
@@ -190,6 +178,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "cc0d35079ddb786e102601fb0e58cd9290cf8cd46ae31d82bf98e542c9b4822b"
+  inputs-digest = "2bf9249431288bdd07dfb080cc316b733832e7fa5072ecff020b387b8cb14fd2"
   solver-name = "gps-cdcl"
   solver-version = 1

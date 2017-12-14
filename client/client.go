@@ -2,7 +2,10 @@
 package client
 
 import (
+	"crypto/tls"
+	"crypto/x509"
 	"io"
+	"io/ioutil"
 	"log"
 
 	"github.com/pkg/errors"
@@ -10,7 +13,6 @@ import (
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
-	"google.golang.org/grpc/metadata"
 )
 
 // client is internal type of Client.
@@ -23,8 +25,11 @@ type client struct {
 // Client is kuma client.
 type Client struct {
 	GRPCServer string
-	UseTLS     bool
-	Token      string
+
+	UseTLS    bool
+	TLSRootCA string
+	TLSCert   string
+	TLSKey    string
 
 	Port      int
 	Subdomain string
@@ -44,13 +49,9 @@ func (cli *Client) Run(ctx context.Context) error {
 	defer cli.Conn.Close()
 
 	hub := api.NewHubClient(cli.Conn)
-	md := metadata.Pairs(
-		"token", cli.Token,
-	)
-	hubCtx := metadata.NewOutgoingContext(ctx, md)
 
 	log.Print("debug: prepare hub information")
-	info, err := hub.Prepare(hubCtx, &api.HubConfig{
+	info, err := hub.Prepare(ctx, &api.HubConfig{
 		Subdomain: cli.Subdomain,
 	})
 	if err != nil {
@@ -60,7 +61,7 @@ func (cli *Client) Run(ctx context.Context) error {
 	log.Printf("debug: hub information: host = %#v", info.Host)
 
 	log.Print("debug: connect to hub")
-	reqStream, err := hub.Connect(hubCtx, info)
+	reqStream, err := hub.Connect(ctx, info)
 	if err != nil {
 		return errors.Wrap(err, "kuma: failed to connect to hub")
 	}
@@ -87,9 +88,30 @@ func (cli *Client) Run(ctx context.Context) error {
 func (cli *Client) dialConn(ctx context.Context) (*grpc.ClientConn, error) {
 	opt := make([]grpc.DialOption, 0, 1)
 	if cli.UseTLS {
-		// nil means host's root CA.
-		creds := credentials.NewClientTLSFromCert(nil, "")
+		cfg := &tls.Config{}
 
+		if cli.TLSRootCA != "" {
+			rootCAs := x509.NewCertPool()
+			pem, err := ioutil.ReadFile(cli.TLSRootCA)
+			if err != nil {
+				return nil, errors.Wrap(err, "failed to read root CA file")
+			}
+			if !rootCAs.AppendCertsFromPEM(pem) {
+				return nil, errors.New("failed to append certificates")
+			}
+			cfg.RootCAs = rootCAs
+		}
+
+		if cli.TLSCert != "" && cli.TLSKey != "" {
+			cert, err := tls.LoadX509KeyPair(cli.TLSCert, cli.TLSKey)
+			if err != nil {
+				return nil, errors.Wrap(err, "failed to load x509 key pair")
+			}
+			cfg.Certificates = []tls.Certificate{cert}
+		}
+		cfg.BuildNameToCertificate()
+
+		creds := credentials.NewTLS(cfg)
 		opt = append(opt, grpc.WithTransportCredentials(creds))
 	} else {
 		opt = append(opt, grpc.WithInsecure())
@@ -105,8 +127,8 @@ func (cli *Client) dialConn(ctx context.Context) (*grpc.ClientConn, error) {
 
 func (cli *Client) handleRequest(ctx context.Context, req *api.Request) {
 	t := &tunnel{
-		Client:  cli,
-		Request: req,
+		Client:    cli,
+		SessionID: req.SessionID,
 	}
 
 	if err := t.Run(ctx); err != nil {

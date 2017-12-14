@@ -11,7 +11,7 @@ import (
 )
 
 type stats struct {
-	TunnelID string
+	SessionID string
 
 	Method string
 	Path   string
@@ -38,7 +38,7 @@ func (ss *stats) Log(d time.Duration) {
 
 	line := &bytes.Buffer{}
 
-	fmt.Fprintf(line, "info: [%s]", ss.TunnelID)
+	fmt.Fprintf(line, "info: [%s]", ss.SessionID)
 	fmt.Fprintf(line, " %s (%6s) %10s", color.New(statusColor(ss.Status)).Sprintf(" %d ", ss.Status), humanize.Bytes(uint64(ss.ResponseBodySize)), d)
 	fmt.Fprintf(line, " | %s %s", color.New(methodColor(ss.Method), color.Bold).Sprintf("%s", ss.Method), color.New(color.Bold).Sprintf("%s", ss.Path))
 	if ss.RequestBodySize > 0 {

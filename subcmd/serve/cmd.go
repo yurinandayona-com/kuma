@@ -55,7 +55,6 @@ func init() {
 	//
 	// Viper settings
 
-	Store.SetDefault("user_db", ".kuma/user_db.toml")
 	Store.SetDefault("http.listen", ":10080")
 	Store.SetDefault("grpc.listen", ":8342")
 	Store.SetDefault("grpc.use_tls", false)
@@ -66,12 +65,12 @@ func init() {
 	Store.BindEnv("grpc.use_tls", "KUMA_SERVE_GRPC_USE_TLS")
 	Store.BindEnv("grpc.tls_cert", "KUMA_SERVE_GRPC_TLS_CERT")
 	Store.BindEnv("grpc.tls_key", "KUMA_SERVE_GRPC_TLS_KEY")
+	Store.BindEnv("grpc.tls_client_ca", "KUMA_SERVE_GRPC_TLS_CLIENT_CA")
 }
 
 // AddFlags sets up Config related flags.
 func AddFlags(flags *flag.FlagSet) {
 	// Flags for general settings
-	flags.StringP("user-db", "u", "", "user DB location")
 	flags.StringP("base-domain", "b", "", "base domain of server")
 
 	// Flags for HTTP server
@@ -82,12 +81,12 @@ func AddFlags(flags *flag.FlagSet) {
 	flags.Bool("grpc-use-tls", false, "flag to use TLS for gRPC server")
 	flags.String("grpc-tls-cert", "", "TLS certification file location")
 	flags.String("grpc-tls-key", "", "TLS key file location")
+	flags.String("grpc-tls-client-ca", "", "TLS client CA file location")
 }
 
 // BindToStore binds flags to Store. It should be called before config.Load
 // against *Config.
 func BindToStore(flags *flag.FlagSet) {
-	Store.BindPFlag("user_db", flags.Lookup("user-db"))
 	Store.BindPFlag("base_domain", flags.Lookup("base-domain"))
 
 	Store.BindPFlag("http.listen", flags.Lookup("http-listen"))
@@ -96,4 +95,5 @@ func BindToStore(flags *flag.FlagSet) {
 	Store.BindPFlag("grpc.use_tls", flags.Lookup("grpc-use-tls"))
 	Store.BindPFlag("grpc.tls_cert", flags.Lookup("grpc-tls-cert"))
 	Store.BindPFlag("grpc.tls_key", flags.Lookup("grpc-tls-key"))
+	Store.BindPFlag("grpc.tls_client_ca", flags.Lookup("grpc-tls-client-ca"))
 }

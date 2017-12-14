@@ -40,8 +40,11 @@ func init() {
 
 			cli := &client.Client{
 				GRPCServer: cfg.GRPCServer,
-				UseTLS:     cfg.UseTLS,
-				Token:      cfg.Token,
+
+				UseTLS:    cfg.UseTLS,
+				TLSRootCA: cfg.TLSRootCA,
+				TLSCert:   cfg.TLSCert,
+				TLSKey:    cfg.TLSKey,
 
 				Port:      cfg.Port,
 				Subdomain: cfg.Subdomain,
@@ -74,14 +77,13 @@ func init() {
 
 // AddFlags sets up Config related flags.
 func AddFlags(flags *flag.FlagSet) {
-	// Flags for gRPC server
 	flags.String("grpc-server", "", "gRPC server address to connect")
 	flags.BoolP("use-tls", "T", false, "flag to use TLS to connect gRPC server")
-	flags.StringP("token", "t", "", "user token")
-
-	// Flags for local
-	flags.IntP("port", "p", 0, "localhost port number to connect")
-	flags.StringP("subdomain", "S", "", "public URL subdomain")
+	flags.String("tls-cert", "", "TLS certification file location")
+	flags.String("tls-key", "", "TLS key file location")
+	flags.String("tls-root-ca", "", "TLS root CA file location")
+	flags.IntP("port", "p", 0, "localhost port number to proxy")
+	flags.StringP("subdomain", "S", "", "subdomain name to require")
 }
 
 // BindToStore binds flags to Store. It should be called before config.Load
@@ -89,7 +91,9 @@ func AddFlags(flags *flag.FlagSet) {
 func BindToStore(flags *flag.FlagSet) {
 	Store.BindPFlag("grpc_server", flags.Lookup("grpc-server"))
 	Store.BindPFlag("use_tls", flags.Lookup("use-tls"))
-	Store.BindPFlag("token", flags.Lookup("token"))
+	Store.BindPFlag("tls_cert", flags.Lookup("tls-cert"))
+	Store.BindPFlag("tls_key", flags.Lookup("tls-key"))
+	Store.BindPFlag("tls_root_ca", flags.Lookup("tls-root-ca"))
 	Store.BindPFlag("port", flags.Lookup("port"))
 	Store.BindPFlag("subdomain", flags.Lookup("subdomain"))
 }

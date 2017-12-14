@@ -1,6 +1,10 @@
 package serve
 
 import (
+	"crypto/tls"
+	"crypto/x509"
+	"errors"
+	"io/ioutil"
 	"log"
 	"net"
 	"net/http"
@@ -8,13 +12,12 @@ import (
 	"github.com/speps/go-hashids"
 	"github.com/yurinandayona-com/kuma/api"
 	"github.com/yurinandayona-com/kuma/server"
-	"github.com/yurinandayona-com/kuma/userdb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 )
 
 const (
-	hashIDsMinLength = 17
+	hashIDMinLength = 17
 )
 
 type runner struct {
@@ -27,25 +30,19 @@ type runner struct {
 }
 
 func (r *runner) Run() error {
-	log.Printf("debug: load user DB: %s", r.Config.UserDB)
-	userDB, err := userdb.LoadUserDB(r.Config.UserDB)
+	hd := hashids.NewData()
+	hd.Salt = r.Config.HashIDSecret
+	hd.MinLength = hashIDMinLength
+	hashID := hashids.NewWithData(hd)
+
+	svr, err := server.New(&server.Config{
+		BaseDomain: r.Config.BaseDomain,
+		HashID:     hashID,
+	})
 	if err != nil {
 		return err
 	}
-
-	hd := hashids.NewData()
-	hd.Salt = r.Config.HashIDsSalt
-	hd.MinLength = hashIDsMinLength
-	hashID := hashids.NewWithData(hd)
-
-	r.server = &server.Server{
-		BaseDomain: r.Config.BaseDomain,
-		HashID:     hashID,
-		UserVerifier: &userdb.JWTManager{
-			UserDB:  userDB,
-			HMACKey: []byte(r.Config.HMACKey),
-		},
-	}
+	r.server = svr
 
 	errCh := make(chan error, 2)
 
@@ -82,11 +79,32 @@ func (r *runner) runGRPCServer(errCh chan<- error) {
 
 	serverOpt := make([]grpc.ServerOption, 0)
 	if r.Config.GRPC.UseTLS {
-		creds, err := credentials.NewServerTLSFromFile(r.Config.GRPC.TLSCert, r.Config.GRPC.TLSKey)
+		cert, err := tls.LoadX509KeyPair(r.Config.GRPC.TLSCert, r.Config.GRPC.TLSKey)
 		if err != nil {
 			errCh <- err
 			return
 		}
+		cfg := &tls.Config{
+			Certificates: []tls.Certificate{cert},
+		}
+
+		if r.Config.GRPC.TLSClientCA != "" {
+			cfg.ClientAuth = tls.RequireAndVerifyClientCert
+			clientCAs := x509.NewCertPool()
+			pem, err := ioutil.ReadFile(r.Config.GRPC.TLSClientCA)
+			if err != nil {
+				errCh <- err
+				return
+			}
+			if !clientCAs.AppendCertsFromPEM(pem) {
+				errCh <- errors.New("failed to append certificates")
+				return
+			}
+			cfg.ClientCAs = clientCAs
+		}
+		cfg.BuildNameToCertificate()
+
+		creds := credentials.NewTLS(cfg)
 		serverOpt = append(serverOpt, grpc.Creds(creds))
 	}
 

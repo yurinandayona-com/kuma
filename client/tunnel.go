@@ -23,8 +23,8 @@ var (
 )
 
 type tunnel struct {
-	Client  *Client
-	Request *api.Request
+	Client    *Client
+	SessionID string
 
 	tunnel api.TunnelClient
 	ctx    context.Context
@@ -36,9 +36,7 @@ func (t *tunnel) Run(ctx context.Context) error {
 	t.tunnel = api.NewTunnelClient(t.Client.Conn)
 
 	md := metadata.Pairs(
-		"token", t.Client.Token,
-		"host", t.Request.Host,
-		"tunnel-id", t.Request.TunnelID,
+		"kuma-session-id", t.SessionID,
 	)
 	t.ctx = metadata.NewOutgoingContext(ctx, md)
 
@@ -53,7 +51,7 @@ func (t *tunnel) Run(ctx context.Context) error {
 }
 
 func (t *tunnel) runInternal(ctx context.Context) (ss *stats, err error) {
-	ss = &stats{TunnelID: t.Request.TunnelID}
+	ss = &stats{SessionID: t.SessionID}
 
 	httpRequest, w, err := t.receiveHeader(ctx, ss)
 	if err != nil {
@@ -203,6 +201,6 @@ func (sbw *sendBodyWriter) Write(buf []byte) (int, error) {
 func (t *tunnel) sendError(err error) {
 	_, err = t.tunnel.SendError(t.ctx, &api.ResponseError{Error: err.Error()})
 	if err != nil {
-		log.Printf("alert: tunnel [%s]: kuma: failed to send an error to tunnel: %s", t.Request.TunnelID, err)
+		log.Printf("alert: tunnel [%s]: kuma: failed to send an error to tunnel: %s", t.SessionID, err)
 	}
 }

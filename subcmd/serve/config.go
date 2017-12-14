@@ -6,14 +6,8 @@ import (
 
 // Config represents configuration file contents for 'kuma serve'.
 type Config struct {
-	// User DB location.
-	UserDB string `mapstructure:"user_db"`
-
-	// Salt string for HashIDs.
-	HashIDsSalt string `mapstructure:"hash_ids_salt" validate:"required"`
-
-	// Private key for HMAC.
-	HMACKey string `mapstructure:"hmac_key" validate:"required"`
+	// HashIDSecret is salt string for HashIDs.
+	HashIDSecret string `mapstructure:"hash_id_secret" validate:"required"`
 
 	// Base domain.
 	BaseDomain string `mapstructure:"base_domain" validate:"required"`
@@ -35,16 +29,17 @@ type Config struct {
 		// Certification file and private key file.
 		TLSCert string `mapstructure:"tls_cert"`
 		TLSKey  string `mapstructure:"tls_key"`
+
+		// TLS CA location for client certificate authentication.
+		TLSClientCA string `mapstructure:"tls_client_ca"`
 	} `mapstructure:"grpc"`
 }
 
 // DebugLog inspects configuration contents as debug logs.
 //
-// It does not show HashIDsSalt and HMACKey for security reason.
+// It does not show HashIDSecret for security reason.
 func (cfg *Config) DebugLog() {
-	log.Printf("debug: user_db = %#v", cfg.UserDB)
-	log.Print("debug: hash_ids_salt = *** (hide)")
-	log.Print("debug: hmac_key = *** (hide)")
+	log.Print("debug: hash_id_secret = *** (hide)")
 	log.Printf("debug: base_domain = %#v", cfg.BaseDomain)
 
 	log.Printf("debug: http.listen = %#v", cfg.HTTP.Listen)
@@ -53,4 +48,5 @@ func (cfg *Config) DebugLog() {
 	log.Printf("debug: grpc.use_tls = %#v", cfg.GRPC.UseTLS)
 	log.Printf("debug: grpc.tls_cert = %#v", cfg.GRPC.TLSCert)
 	log.Printf("debug: grpc.tls_key = %#v", cfg.GRPC.TLSKey)
+	log.Printf("debug: grpc.client_ca = %#v", cfg.GRPC.TLSClientCA)
 }

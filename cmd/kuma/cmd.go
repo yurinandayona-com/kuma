@@ -8,7 +8,6 @@ import (
 	flag "github.com/spf13/pflag"
 	"github.com/yurinandayona-com/kuma/subcmd/connect"
 	"github.com/yurinandayona-com/kuma/subcmd/serve"
-	"github.com/yurinandayona-com/kuma/subcmd/token"
 	"github.com/yurinandayona-com/kuma/version"
 )
 
@@ -31,7 +30,6 @@ func init() {
 
 	Cmd.AddCommand(connect.Cmd)
 	Cmd.AddCommand(serve.Cmd)
-	Cmd.AddCommand(token.Cmd)
 
 	cobra.OnInitialize(func() {
 		colog.Register()
