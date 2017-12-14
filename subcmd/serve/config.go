@@ -27,8 +27,10 @@ type Config struct {
 		UseTLS bool `mapstructure:"use_tls"`
 
 		// Certification file and private key file.
-		TLSCert  string `mapstructure:"tls_cert"`
-		TLSKey   string `mapstructure:"tls_key"`
+		TLSCert string `mapstructure:"tls_cert"`
+		TLSKey  string `mapstructure:"tls_key"`
+
+		// CA location for client certificate authentication.
 		ClientCA string `mapstructure:"client_ca"`
 	} `mapstructure:"grpc"`
 }
