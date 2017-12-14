@@ -74,14 +74,14 @@ func AddFlags(flags *flag.FlagSet) {
 	flags.StringP("base-domain", "b", "", "base domain of server")
 
 	// Flags for HTTP server
-	flags.String("http-listen", "", "address to listen HTTP server")
+	flags.String("http.listen", "", "address to listen HTTP server")
 
 	// Flags for gRPC server
-	flags.String("grpc-listen", "", "address to listen gRPC server")
-	flags.Bool("grpc-use-tls", false, "flag to use TLS for gRPC server")
-	flags.String("grpc-tls-cert", "", "TLS certification file location")
-	flags.String("grpc-tls-key", "", "TLS key file location")
-	flags.String("grpc-tls-client-ca", "", "TLS client CA file location")
+	flags.String("grpc.listen", "", "address to listen gRPC server")
+	flags.Bool("grpc.use-tls", false, "flag to use TLS for gRPC server")
+	flags.String("grpc.tls-cert", "", "TLS certification file location")
+	flags.String("grpc.tls-key", "", "TLS key file location")
+	flags.String("grpc.tls-client-ca", "", "TLS client CA file location")
 }
 
 // BindToStore binds flags to Store. It should be called before config.Load
@@ -89,11 +89,11 @@ func AddFlags(flags *flag.FlagSet) {
 func BindToStore(flags *flag.FlagSet) {
 	Store.BindPFlag("base_domain", flags.Lookup("base-domain"))
 
-	Store.BindPFlag("http.listen", flags.Lookup("http-listen"))
+	Store.BindPFlag("http.listen", flags.Lookup("http.listen"))
 
-	Store.BindPFlag("grpc.listen", flags.Lookup("grpc-listen"))
-	Store.BindPFlag("grpc.use_tls", flags.Lookup("grpc-use-tls"))
-	Store.BindPFlag("grpc.tls_cert", flags.Lookup("grpc-tls-cert"))
-	Store.BindPFlag("grpc.tls_key", flags.Lookup("grpc-tls-key"))
-	Store.BindPFlag("grpc.tls_client_ca", flags.Lookup("grpc-tls-client-ca"))
+	Store.BindPFlag("grpc.listen", flags.Lookup("grpc.listen"))
+	Store.BindPFlag("grpc.use_tls", flags.Lookup("grpc.use-tls"))
+	Store.BindPFlag("grpc.tls_cert", flags.Lookup("grpc.tls-cert"))
+	Store.BindPFlag("grpc.tls_key", flags.Lookup("grpc.tls-key"))
+	Store.BindPFlag("grpc.tls_client_ca", flags.Lookup("grpc.tls-client-ca"))
 }
