@@ -79,6 +79,9 @@ func init() {
 func AddFlags(flags *flag.FlagSet) {
 	flags.String("grpc-server", "", "gRPC server address to connect")
 	flags.BoolP("use-tls", "T", false, "flag to use TLS to connect gRPC server")
+	flags.String("tls-cert", "", "TLS certification file location")
+	flags.String("tls-key", "", "TLS key file location")
+	flags.String("root-ca", "", "TLS root CA file location")
 	flags.IntP("port", "p", 0, "localhost port number to proxy")
 	flags.StringP("subdomain", "S", "", "subdomain name to require")
 }
@@ -88,6 +91,9 @@ func AddFlags(flags *flag.FlagSet) {
 func BindToStore(flags *flag.FlagSet) {
 	Store.BindPFlag("grpc_server", flags.Lookup("grpc-server"))
 	Store.BindPFlag("use_tls", flags.Lookup("use-tls"))
+	Store.BindPFlag("tls_cert", flags.Lookup("tls-cert"))
+	Store.BindPFlag("tls_key", flags.Lookup("tls-key"))
+	Store.BindPFlag("root_ca", flags.Lookup("root-ca"))
 	Store.BindPFlag("port", flags.Lookup("port"))
 	Store.BindPFlag("subdomain", flags.Lookup("subdomain"))
 }
