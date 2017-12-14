@@ -42,8 +42,8 @@ type Server struct {
 	*Config
 
 	nextHubID int64
-	hubHosts map[string]int64
-	hubs     map[int64]*hub
+	hubHosts  map[string]int64
+	hubs      map[int64]*hub
 }
 
 func New(cfg *Config) (*Server, error) {
