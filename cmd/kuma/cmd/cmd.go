@@ -1,4 +1,4 @@
-package main
+package cmd
 
 import (
 	"log"
@@ -6,12 +6,12 @@ import (
 	"github.com/comail/colog"
 	"github.com/spf13/cobra"
 	flag "github.com/spf13/pflag"
-	"github.com/yurinandayona-com/kuma/subcmd/connect"
-	"github.com/yurinandayona-com/kuma/subcmd/serve"
+	"github.com/yurinandayona-com/kuma/cmd/kuma/cmd/connect"
+	"github.com/yurinandayona-com/kuma/cmd/kuma/cmd/serve"
 	"github.com/yurinandayona-com/kuma/version"
 )
 
-// 'kuma' command.
+// Cmd is 'kuma' command.
 var Cmd *cobra.Command
 
 func init() {

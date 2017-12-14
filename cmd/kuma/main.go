@@ -21,10 +21,12 @@ package main
 
 import (
 	"os"
+
+	root "github.com/yurinandayona-com/kuma/cmd/kuma/cmd"
 )
 
 func main() {
-	if err := Cmd.Execute(); err != nil {
+	if err := root.Cmd.Execute(); err != nil {
 		os.Exit(1)
 	}
 }
