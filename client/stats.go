@@ -50,14 +50,18 @@ func (ss *stats) Log(d time.Duration) {
 
 func statusColor(code int) color.Attribute {
 	switch {
+	case 100 <= code && code < 200:
+		return color.BgHiCyan
 	case 200 <= code && code < 300:
-		return color.BgHiGreen
+		return color.BgHiBlue
 	case 300 <= code && code < 400:
-		return color.BgHiWhite
+		return color.BgHiGreen
 	case 400 <= code && code < 500:
+		return color.BgHiYellow
+	case 500 <= code:
 		return color.BgHiRed
 	default:
-		return color.BgHiYellow
+		return color.BgHiWhite
 	}
 }
 
